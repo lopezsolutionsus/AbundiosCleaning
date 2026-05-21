@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Abundios Cleaning</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: var(--pink-light);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .login-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-box {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 24px rgba(224, 122, 150, 0.15);
+    }
+
+    .login-box h1 {
+      font-size: 1.5rem;
+      color: var(--pink-dark);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .login-box p {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .field {
+      margin-bottom: 1.2rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 0.4rem;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #f0d6de;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--pink-dark);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--pink-dark);
+      color: white;
+      border: none;
+      padding: 0.85rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #c5607a;
+    }
+
+    .error-msg {
+      color: #c0392b;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--pink-dark);
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <span class="logo">Abundios Cleaning</span>
+    </div>
+  </nav>
+
+  <div class="login-wrap">
+    <div class="login-box">
+      <h1>Welcome back</h1>
+      <p>Sign in to your dashboard</p>
+
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter your username" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter your password" />
+      </div>
+
+      <button class="btn-submit" onclick="login()">Sign In</button>
+      <p class="error-msg" id="errorMsg">Incorrect username or password.</p>
+
+      <a href="index.html" class="back-link">← Back to website</a>
+    </div>
+  </div>
+
+  <script>
+    async function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (!res.ok) {
+          errorMsg.style.display = 'block';
+          return;
+        }
+
+        const data = await res.json();
+        localStorage.setItem('token', data.access_token);
+        window.location.href = '/app/';
+      } catch (e) {
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') login();
+    });
+  </script>
+
+</body>
+</html>

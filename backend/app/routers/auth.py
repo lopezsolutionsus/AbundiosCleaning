@@ -8,7 +8,7 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 @router.post("/login", response_model=Token)
 def login(form: LoginForm, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.username == form.username).first()
+    user = db.query(models.User).filter(models.User.username == form.username.lower()).first()
     if not user or not auth.verify_password(form.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

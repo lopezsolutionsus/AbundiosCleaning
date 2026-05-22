@@ -27,7 +27,7 @@ def create_default_user():
     db = Session(engine)
     existing = db.query(models.User).filter(models.User.username == "lili").first()
     if not existing:
-        user = models.User(username="lili", hashed_password=hash_password("cambia-esta-password"))
+        user = models.User(username="lili", hashed_password=hash_password("lili1234"))
         db.add(user)
         db.commit()
     db.close()

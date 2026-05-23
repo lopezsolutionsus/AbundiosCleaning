@@ -25,9 +25,16 @@ app.include_router(appointments.router)
 @app.on_event("startup")
 def create_default_user():
     db = Session(engine)
-    existing = db.query(models.User).filter(models.User.username == "lili").first()
+    existing = db.query(models.User).filter(models.User.email == "lili@abundioscleaning.com").first()
     if not existing:
-        user = models.User(username="lili", hashed_password=hash_password("lili1234"))
+        user = models.User(
+            email="lili@abundioscleaning.com",
+            username="lili",
+            hashed_password=hash_password("lili1234"),
+            first_name="Lili",
+            last_name="Abundio-Alonso",
+            role="admin"
+        )
         db.add(user)
         db.commit()
     db.close()

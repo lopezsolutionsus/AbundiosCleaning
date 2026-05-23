@@ -24,14 +24,14 @@ class PropertyIn(BaseModel):
 @router.get("/properties")
 def get_properties(user=Depends(get_current_user), db: Session = Depends(get_db)):
     props = db.query(models.Property).filter(models.Property.user_id == user.id).all()
-    return {"data": [
+    return [
         {
             "id": p.id, "name": p.name, "type": p.type,
             "address": p.address, "city": p.city, "state": p.state,
             "zip_code": p.zip_code, "notes": p.notes,
         }
         for p in props
-    ]}
+    ]
 
 
 @router.post("/properties", status_code=201)
@@ -40,11 +40,11 @@ def create_property(body: PropertyIn, user=Depends(get_current_user), db: Sessio
     db.add(prop)
     db.commit()
     db.refresh(prop)
-    return {"data": {
+    return {
         "id": prop.id, "name": prop.name, "type": prop.type,
         "address": prop.address, "city": prop.city, "state": prop.state,
         "zip_code": prop.zip_code, "notes": prop.notes,
-    }}
+    }
 
 
 @router.delete("/properties/{property_id}", status_code=204)
@@ -64,10 +64,10 @@ def delete_property(property_id: str, user=Depends(get_current_user), db: Sessio
 @router.get("/service-types")
 def get_service_types(db: Session = Depends(get_db), user=Depends(get_current_user)):
     services = db.query(models.ServiceType).all()
-    return {"data": [
+    return [
         {"id": s.id, "name": s.name, "description": s.description, "duration_hours": s.duration_hours}
         for s in services
-    ]}
+    ]
 
 
 # ── Quotes ───────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ def create_quote(body: QuoteIn, user=Depends(get_current_user), db: Session = De
     db.add(quote)
     db.commit()
     db.refresh(quote)
-    return {"data": {"id": quote.id, "status": quote.status}}
+    return {"id": quote.id, "status": quote.status}
 
 
 @router.get("/quotes")
@@ -106,7 +106,7 @@ def get_quotes(user=Depends(get_current_user), db: Session = Depends(get_db)):
         .order_by(models.Quote.created_at.desc())
         .all()
     )
-    return {"data": [
+    return [
         {
             "id": q.id,
             "status": q.status,
@@ -117,7 +117,7 @@ def get_quotes(user=Depends(get_current_user), db: Session = Depends(get_db)):
             "created_at": str(q.created_at),
         }
         for q in quotes
-    ]}
+    ]
 
 
 # ── Appointments ─────────────────────────────────────────────────────────────
@@ -130,7 +130,7 @@ def get_appointments(user=Depends(get_current_user), db: Session = Depends(get_d
         .order_by(models.Appointment.date.desc())
         .all()
     )
-    return {"data": [
+    return [
         {
             "id": a.id,
             "date": a.date,
@@ -140,4 +140,4 @@ def get_appointments(user=Depends(get_current_user), db: Session = Depends(get_d
             "property_address": f"{a.property.address}, {a.property.city}" if a.property else "",
         }
         for a in appts
-    ]}
+    ]

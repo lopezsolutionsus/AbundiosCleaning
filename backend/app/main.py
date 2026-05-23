@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
-from .routers import auth, clients, appointments
+from .routers import auth, clients, appointments, client as client_router
 from . import models
 from .auth import hash_password
 from sqlalchemy.orm import Session
@@ -21,21 +21,29 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(clients.router)
 app.include_router(appointments.router)
+app.include_router(client_router.router)
 
 @app.on_event("startup")
-def create_default_user():
+def seed_defaults():
     db = Session(engine)
-    existing = db.query(models.User).filter(models.User.email == "lili@abundioscleaning.com").first()
-    if not existing:
-        user = models.User(
+    if not db.query(models.User).filter(models.User.email == "lili@abundioscleaning.com").first():
+        db.add(models.User(
             email="lili@abundioscleaning.com",
             username="lili",
             hashed_password=hash_password("lili1234"),
             first_name="Lili",
             last_name="Abundio-Alonso",
             role="admin"
-        )
-        db.add(user)
+        ))
+        db.commit()
+
+    if db.query(models.ServiceType).count() == 0:
+        db.add_all([
+            models.ServiceType(name="General Cleaning", description="Standard home or office cleaning", duration_hours=2.0),
+            models.ServiceType(name="Deep Cleaning", description="Thorough deep clean of all areas", duration_hours=4.0),
+            models.ServiceType(name="Move-In / Move-Out", description="Full clean for move-in or move-out", duration_hours=5.0),
+            models.ServiceType(name="Post-Construction", description="Clean-up after renovation or construction", duration_hours=6.0),
+        ])
         db.commit()
     db.close()
 

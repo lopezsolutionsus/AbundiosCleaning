@@ -1,0 +1,6 @@
+node_modules/
+client-portal/node_modules/
+client-portal/build/
+__pycache__/
+*.pyc
+.env.local

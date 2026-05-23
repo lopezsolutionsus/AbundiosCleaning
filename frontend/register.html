@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | Abundios Cleaning</title>
+  <title>Sign Up | Abundios Cleaning</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
@@ -58,8 +58,11 @@
       outline: none;
       transition: border 0.2s;
     }
-    .field input:focus {
-      border-color: var(--pink-dark);
+    .field input:focus { border-color: var(--pink-dark); }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
     }
     .btn-submit {
       width: 100%;
@@ -107,65 +110,108 @@
 
   <div class="login-wrap">
     <div class="login-box">
-      <h1>Welcome back</h1>
-      <p class="subtitle">Sign in with your email or username</p>
+      <h1>Create account</h1>
+      <p class="subtitle">Join Abundios Cleaning</p>
 
-      <div class="field">
-        <label>Email or Username</label>
-        <input type="text" id="identifier" placeholder="Enter your email or username" />
+      <div class="row">
+        <div class="field">
+          <label>First Name *</label>
+          <input type="text" id="first_name" placeholder="John" />
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input type="text" id="last_name" placeholder="Doe" />
+        </div>
       </div>
 
       <div class="field">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Enter your password" />
+        <label>Email *</label>
+        <input type="email" id="email" placeholder="john@example.com" />
       </div>
 
-      <button class="btn-submit" onclick="login()">Sign In</button>
-      <p class="error-msg" id="errorMsg">Incorrect email/username or password.</p>
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="phone" placeholder="(434) 000-0000" />
+      </div>
+
+      <div class="field">
+        <label>Password *</label>
+        <input type="password" id="password" placeholder="At least 6 characters" />
+      </div>
+
+      <div class="field">
+        <label>Confirm Password *</label>
+        <input type="password" id="confirm_password" placeholder="Repeat your password" />
+      </div>
+
+      <button class="btn-submit" onclick="register()">Create Account</button>
+      <p class="error-msg" id="errorMsg"></p>
 
       <div class="links">
-        <a href="register.html">Don't have an account? Sign up</a>
+        <a href="login.html">Already have an account? Sign in</a>
         <a href="index.html">← Back to website</a>
       </div>
     </div>
   </div>
 
   <script>
-    async function login() {
-      const identifier = document.getElementById('identifier').value.trim();
-      const password   = document.getElementById('password').value.trim();
-      const errorMsg   = document.getElementById('errorMsg');
+    async function register() {
+      const first_name       = document.getElementById('first_name').value.trim();
+      const last_name        = document.getElementById('last_name').value.trim();
+      const email            = document.getElementById('email').value.trim();
+      const phone            = document.getElementById('phone').value.trim();
+      const password         = document.getElementById('password').value.trim();
+      const confirm_password = document.getElementById('confirm_password').value.trim();
+      const errorMsg         = document.getElementById('errorMsg');
+
       errorMsg.style.display = 'none';
 
+      if (!first_name || !email || !password) {
+        errorMsg.textContent = 'Please fill in all required fields.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      if (password !== confirm_password) {
+        errorMsg.textContent = 'Passwords do not match.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMsg.textContent = 'Password must be at least 6 characters.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
       try {
-        const res = await fetch('/api/auth/login', {
+        const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ identifier, password }),
+          body: JSON.stringify({ first_name, last_name, email, phone, password }),
         });
 
+        const data = await res.json();
+
         if (!res.ok) {
+          errorMsg.textContent = data.detail || 'Registration failed.';
           errorMsg.style.display = 'block';
           return;
         }
 
-        const data = await res.json();
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('role', data.role);
         localStorage.setItem('first_name', data.first_name);
+        window.location.href = '/client/';
 
-        if (data.role === 'admin' || data.role === 'staff') {
-          window.location.href = '/app/';
-        } else {
-          window.location.href = '/client/';
-        }
       } catch (e) {
+        errorMsg.textContent = 'Something went wrong. Please try again.';
         errorMsg.style.display = 'block';
       }
     }
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') login();
+      if (e.key === 'Enter') register();
     });
   </script>
 

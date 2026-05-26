@@ -78,5 +78,13 @@
     <p>© 2026 Abundios Cleaning · Charlottesville, VA</p>
   </footer>
 
+  <script>
+    const token = localStorage.getItem('token');
+    const role  = localStorage.getItem('role');
+    if (token) {
+      if (role === 'admin' || role === 'staff') window.location.href = '/app/';
+      else window.location.href = '/client/';
+    }
+  </script>
 </body>
 </html>

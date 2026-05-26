@@ -4,6 +4,10 @@ from ..database import get_db
 from .. import models, auth
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
+GOOGLE_CLIENT_ID = "52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com"
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -59,6 +63,53 @@ def register(form: RegisterForm, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
+    token = auth.create_access_token({"sub": user.email})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "role": user.role,
+        "first_name": user.first_name,
+    }
+
+class GoogleLoginForm(BaseModel):
+    credential: str
+
+@router.post("/google", response_model=Token)
+def google_login(form: GoogleLoginForm, db: Session = Depends(get_db)):
+    try:
+        info = id_token.verify_oauth2_token(
+            form.credential,
+            google_requests.Request(),
+            GOOGLE_CLIENT_ID,
+        )
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid Google token")
+
+    google_id = info["sub"]
+    email = info.get("email", "").lower()
+    first_name = info.get("given_name", "")
+    last_name = info.get("family_name", "")
+
+    user = db.query(models.User).filter(models.User.google_id == google_id).first()
+    if not user and email:
+        user = db.query(models.User).filter(models.User.email == email).first()
+
+    if not user:
+        user = models.User(
+            email=email,
+            google_id=google_id,
+            first_name=first_name,
+            last_name=last_name,
+            hashed_password="",
+            role="client",
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    elif not user.google_id:
+        user.google_id = google_id
+        db.commit()
+
     token = auth.create_access_token({"sub": user.email})
     return {
         "access_token": token,

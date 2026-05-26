@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | Abundios Cleaning</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       background: var(--pink-light);
@@ -95,6 +96,38 @@
       text-decoration: none;
     }
     .links a:hover { text-decoration: underline; }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+      color: #bbb;
+      font-size: 0.85rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #f0d6de;
+    }
+    .btn-google {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      background: white;
+      color: #444;
+      border: 1.5px solid #f0d6de;
+      padding: 0.75rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .btn-google:hover { border-color: #c5607a; box-shadow: 0 2px 8px rgba(224,122,150,0.15); }
+    .btn-google img { width: 20px; height: 20px; }
   </style>
 </head>
 <body>
@@ -122,6 +155,19 @@
 
       <button class="btn-submit" onclick="login()">Sign In</button>
       <p class="error-msg" id="errorMsg">Incorrect email/username or password.</p>
+
+      <div class="divider">or</div>
+
+      <button class="btn-google" onclick="googleLogin()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+        Sign in with Google
+      </button>
+
+      <div id="g_id_onload"
+        data-client_id="52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com"
+        data-callback="handleGoogleCredential"
+        data-auto_prompt="false">
+      </div>
 
       <div class="links">
         <a href="register.html">Don't have an account? Sign up</a>
@@ -167,6 +213,43 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter') login();
     });
+
+    function googleLogin() {
+      google.accounts.id.initialize({
+        client_id: '52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com',
+        callback: handleGoogleCredential,
+      });
+      google.accounts.id.prompt();
+    }
+
+    async function handleGoogleCredential(response) {
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.style.display = 'none';
+      try {
+        const res = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential }),
+        });
+        if (!res.ok) {
+          errorMsg.textContent = 'Google login failed. Please try again.';
+          errorMsg.style.display = 'block';
+          return;
+        }
+        const data = await res.json();
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('first_name', data.first_name);
+        if (data.role === 'admin' || data.role === 'staff') {
+          window.location.href = '/app/';
+        } else {
+          window.location.href = '/client/';
+        }
+      } catch (e) {
+        errorMsg.textContent = 'Something went wrong. Please try again.';
+        errorMsg.style.display = 'block';
+      }
+    }
   </script>
 
 </body>

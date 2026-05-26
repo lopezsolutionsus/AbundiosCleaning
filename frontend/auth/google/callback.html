@@ -38,7 +38,9 @@
         localStorage.setItem('role', data.role);
         localStorage.setItem('first_name', data.first_name);
 
-        if (data.role === 'admin' || data.role === 'staff') {
+        if (data.role === 'client' && !data.phone_verified) {
+          window.location.href = '/verify-phone.html';
+        } else if (data.role === 'admin' || data.role === 'staff') {
           window.location.href = '/app/';
         } else {
           window.location.href = '/client/';

@@ -18,6 +18,9 @@ services:
     environment:
       DATABASE_URL: postgresql://abundios_user:abundios2026#@db/abundios
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_VERIFY_SID: ${TWILIO_VERIFY_SID}
     ports:
       - "8000:8000"
     depends_on:

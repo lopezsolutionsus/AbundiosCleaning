@@ -19,6 +19,7 @@ class User(Base):
     phone           = Column(String, default="")
     role            = Column(String, default="client")  # admin / staff / client
     google_id       = Column(String, nullable=True)
+    phone_verified  = Column(Boolean, server_default="false", default=False)
     created_at      = Column(DateTime, server_default=func.now())
 
     properties         = relationship("Property", back_populates="owner", cascade="all, delete")

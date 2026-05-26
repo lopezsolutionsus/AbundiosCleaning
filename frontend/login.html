@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | Abundios Cleaning</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       background: var(--pink-light);
@@ -163,7 +162,6 @@
         Sign in with Google
       </button>
 
-      <div id="google-btn-hidden" style="display:none;"></div>
 
       <div class="links">
         <a href="register.html">Don't have an account? Sign up</a>
@@ -211,47 +209,10 @@
     });
 
     function googleLogin() {
-      document.querySelector('#google-btn-hidden div[role=button]').click();
-    }
-
-    window.onGoogleLibraryLoad = function() {
-      google.accounts.id.initialize({
-        client_id: '52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com',
-        callback: handleGoogleCredential,
-      });
-      google.accounts.id.renderButton(
-        document.getElementById('google-btn-hidden'),
-        { theme: 'outline', size: 'large' }
-      );
-    };
-
-    async function handleGoogleCredential(response) {
-      const errorMsg = document.getElementById('errorMsg');
-      errorMsg.style.display = 'none';
-      try {
-        const res = await fetch('/api/auth/google', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ credential: response.credential }),
-        });
-        if (!res.ok) {
-          errorMsg.textContent = 'Google login failed. Please try again.';
-          errorMsg.style.display = 'block';
-          return;
-        }
-        const data = await res.json();
-        localStorage.setItem('token', data.access_token);
-        localStorage.setItem('role', data.role);
-        localStorage.setItem('first_name', data.first_name);
-        if (data.role === 'admin' || data.role === 'staff') {
-          window.location.href = '/app/';
-        } else {
-          window.location.href = '/client/';
-        }
-      } catch (e) {
-        errorMsg.textContent = 'Something went wrong. Please try again.';
-        errorMsg.style.display = 'block';
-      }
+      const clientId = '52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com';
+      const redirectUri = encodeURIComponent('https://abundioscleaning.com/auth/google/callback');
+      const scope = encodeURIComponent('openid email profile');
+      window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
     }
   </script>
 

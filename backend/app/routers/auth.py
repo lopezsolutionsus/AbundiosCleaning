@@ -6,8 +6,12 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
+import requests as http_requests
+import os
 
 GOOGLE_CLIENT_ID = "52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "")
+GOOGLE_REDIRECT_URI = "https://abundioscleaning.com/auth/google/callback"
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -71,20 +75,10 @@ def register(form: RegisterForm, db: Session = Depends(get_db)):
         "first_name": user.first_name,
     }
 
-class GoogleLoginForm(BaseModel):
-    credential: str
+class GoogleCallbackForm(BaseModel):
+    code: str
 
-@router.post("/google", response_model=Token)
-def google_login(form: GoogleLoginForm, db: Session = Depends(get_db)):
-    try:
-        info = id_token.verify_oauth2_token(
-            form.credential,
-            google_requests.Request(),
-            GOOGLE_CLIENT_ID,
-        )
-    except ValueError:
-        raise HTTPException(status_code=401, detail="Invalid Google token")
-
+def _login_or_create_google_user(info: dict, db: Session):
     google_id = info["sub"]
     email = info.get("email", "").lower()
     first_name = info.get("given_name", "")
@@ -110,6 +104,27 @@ def google_login(form: GoogleLoginForm, db: Session = Depends(get_db)):
         user.google_id = google_id
         db.commit()
 
+    return user
+
+@router.post("/google/callback", response_model=Token)
+def google_callback(form: GoogleCallbackForm, db: Session = Depends(get_db)):
+    token_response = http_requests.post("https://oauth2.googleapis.com/token", data={
+        "code": form.code,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "grant_type": "authorization_code",
+    })
+    if not token_response.ok:
+        raise HTTPException(status_code=401, detail="Failed to exchange Google code")
+
+    id_token_str = token_response.json().get("id_token")
+    try:
+        info = id_token.verify_oauth2_token(id_token_str, google_requests.Request(), GOOGLE_CLIENT_ID)
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid Google token")
+
+    user = _login_or_create_google_user(info, db)
     token = auth.create_access_token({"sub": user.email})
     return {
         "access_token": token,

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Signing in... | Abundios Cleaning</title>
+  <style>
+    body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #fdf0f4; }
+    .msg { text-align: center; color: #c5607a; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <div class="msg">Signing in with Google...</div>
+  <script>
+    (async function() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      const error = params.get('error');
+
+      if (error || !code) {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/google/callback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code }),
+        });
+
+        if (!res.ok) {
+          window.location.href = '/login.html';
+          return;
+        }
+
+        const data = await res.json();
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('first_name', data.first_name);
+
+        if (data.role === 'admin' || data.role === 'staff') {
+          window.location.href = '/app/';
+        } else {
+          window.location.href = '/client/';
+        }
+      } catch (e) {
+        window.location.href = '/login.html';
+      }
+    })();
+  </script>
+</body>
+</html>

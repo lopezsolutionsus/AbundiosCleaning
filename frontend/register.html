@@ -187,11 +187,7 @@
         Sign up with Google
       </button>
 
-      <div id="g_id_onload"
-        data-client_id="52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com"
-        data-callback="handleGoogleCredential"
-        data-auto_prompt="false">
-      </div>
+      <div id="google-btn-hidden" style="display:none;"></div>
 
       <div class="links">
         <a href="login.html">Already have an account? Sign in</a>
@@ -261,12 +257,19 @@
     });
 
     function googleLogin() {
+      document.querySelector('#google-btn-hidden div[role=button]').click();
+    }
+
+    window.onGoogleLibraryLoad = function() {
       google.accounts.id.initialize({
         client_id: '52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com',
         callback: handleGoogleCredential,
       });
-      google.accounts.id.prompt();
-    }
+      google.accounts.id.renderButton(
+        document.getElementById('google-btn-hidden'),
+        { theme: 'outline', size: 'large' }
+      );
+    };
 
     async function handleGoogleCredential(response) {
       const errorMsg = document.getElementById('errorMsg');

@@ -12,7 +12,7 @@ from twilio.rest import Client as TwilioClient
 
 GOOGLE_CLIENT_ID = "52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "")
-GOOGLE_REDIRECT_URI = "https://abundioscleaning.com/auth/google/callback"
+GOOGLE_REDIRECT_URI = "https://app.abundioscleaning.com/auth/google/callback"
 
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN  = os.environ.get("TWILIO_AUTH_TOKEN", "")

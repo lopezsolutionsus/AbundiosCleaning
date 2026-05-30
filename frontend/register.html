@@ -189,7 +189,7 @@
 
       <div class="links">
         <a href="login.html">Already have an account? Sign in</a>
-        <a href="index.html">← Back to website</a>
+        <a href="https://abundioscleaning.com">← Back to website</a>
       </div>
     </div>
   </div>
@@ -242,7 +242,7 @@
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('role', data.role);
         localStorage.setItem('first_name', data.first_name);
-        window.location.href = '/client/';
+        window.location.href = 'https://portal.abundioscleaning.com/';
 
       } catch (e) {
         errorMsg.textContent = 'Something went wrong. Please try again.';
@@ -256,7 +256,7 @@
 
     function googleLogin() {
       const clientId = '52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com';
-      const redirectUri = encodeURIComponent('https://abundioscleaning.com/auth/google/callback');
+      const redirectUri = encodeURIComponent('https://app.abundioscleaning.com/auth/google/callback');
       const scope = encodeURIComponent('openid email profile');
       window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
     }

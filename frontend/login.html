@@ -165,7 +165,7 @@
 
       <div class="links">
         <a href="register.html">Don't have an account? Sign up</a>
-        <a href="index.html">← Back to website</a>
+        <a href="https://abundioscleaning.com">← Back to website</a>
       </div>
     </div>
   </div>
@@ -195,9 +195,9 @@
         localStorage.setItem('first_name', data.first_name);
 
         if (data.role === 'admin' || data.role === 'staff') {
-          window.location.href = '/app/';
+          window.location.href = 'https://app.abundioscleaning.com/';
         } else {
-          window.location.href = '/client/';
+          window.location.href = 'https://portal.abundioscleaning.com/';
         }
       } catch (e) {
         errorMsg.style.display = 'block';
@@ -210,7 +210,7 @@
 
     function googleLogin() {
       const clientId = '52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com';
-      const redirectUri = encodeURIComponent('https://abundioscleaning.com/auth/google/callback');
+      const redirectUri = encodeURIComponent('https://app.abundioscleaning.com/auth/google/callback');
       const scope = encodeURIComponent('openid email profile');
       window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
     }

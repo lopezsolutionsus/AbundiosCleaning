@@ -41,9 +41,9 @@
         if (data.role === 'client' && !data.phone_verified) {
           window.location.href = '/verify-phone.html';
         } else if (data.role === 'admin' || data.role === 'staff') {
-          window.location.href = '/app/';
+          window.location.href = 'https://app.abundioscleaning.com/';
         } else {
-          window.location.href = '/client/';
+          window.location.href = 'https://portal.abundioscleaning.com/';
         }
       } catch (e) {
         window.location.href = '/login.html';

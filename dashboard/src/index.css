@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --pink:       #f2a7bb;
+  --pink-light: #fce4ec;
+  --pink-dark:  #e07a96;
+  --text:       #3a3a3a;
+  --white:      #ffffff;
+  --gray:       #f5f5f5;
+  --border:     #f0d6de;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--text);
+  background: var(--gray);
+}
+
+button {
+  cursor: pointer;
+}

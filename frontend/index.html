@@ -82,8 +82,8 @@
     const token = localStorage.getItem('token');
     const role  = localStorage.getItem('role');
     if (token) {
-      if (role === 'admin' || role === 'staff') window.location.href = '/app/';
-      else window.location.href = '/client/';
+      if (role === 'admin' || role === 'staff') window.location.href = 'https://app.abundioscleaning.com/';
+      else window.location.href = 'https://portal.abundioscleaning.com/';
     }
   </script>
 </body>

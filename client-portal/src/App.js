@@ -8,7 +8,7 @@ import './App.css';
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
   if (!token) {
-    window.location.href = 'https://app.abundioscleaning.com/login.html';
+    window.location.href = 'https://app.abundioscleaning.com/login';
     return null;
   }
   return children;

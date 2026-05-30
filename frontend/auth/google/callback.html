@@ -39,7 +39,7 @@
         localStorage.setItem('first_name', data.first_name);
 
         if (data.role === 'client' && !data.phone_verified) {
-          window.location.href = '/verify-phone.html';
+          window.location.href = '/verify-phone';
         } else if (data.role === 'admin' || data.role === 'staff') {
           window.location.href = 'https://app.abundioscleaning.com/';
         } else {

@@ -15,7 +15,7 @@ function PrivateRoute({ children }) {
 
 function App() {
   return (
-    <BrowserRouter basename={process.env.NODE_ENV === 'production' ? '/app' : '/'}>
+    <BrowserRouter basename="/">
       <Routes>
         <Route path="/" element={
           <PrivateRoute>

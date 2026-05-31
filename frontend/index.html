@@ -12,7 +12,7 @@
 <body>
 
   <!-- NAV -->
-  <nav id="navbar">
+  <nav>
     <div class="nav-inner">
       <span class="logo">Abundios Cleaning</span>
       <div class="nav-links">
@@ -25,27 +25,28 @@
     </div>
   </nav>
 
-  <!-- HERO CAROUSEL -->
+  <!-- HERO -->
   <section class="hero">
-    <div class="carousel">
-      <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80')"></div>
-      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1400&q=80')"></div>
-      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1527515637462-cff94aca208b?w=1400&q=80')"></div>
-      <div class="carousel-overlay"></div>
-    </div>
-    <div class="hero-content">
+    <div class="hero-text">
       <span class="hero-badge">Charlottesville, VA</span>
       <h1>A Clean Home,<br/>A Happy Life</h1>
       <p>Professional cleaning services you can trust — serving Charlottesville and surrounding areas.</p>
       <div class="hero-btns">
         <a href="#contact" class="btn-primary">Book a Cleaning</a>
-        <a href="#services" class="btn-secondary">Our Services</a>
+        <a href="#services" class="btn-outline">Our Services</a>
       </div>
     </div>
-    <div class="carousel-dots">
-      <span class="dot active" onclick="goToSlide(0)"></span>
-      <span class="dot" onclick="goToSlide(1)"></span>
-      <span class="dot" onclick="goToSlide(2)"></span>
+    <div class="hero-carousel">
+      <div class="carousel-track">
+        <img class="carousel-img active" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Clean living room" />
+        <img class="carousel-img" src="https://images.unsplash.com/photo-1527515637462-cff94aca208b?w=700&q=80" alt="Clean kitchen" />
+        <img class="carousel-img" src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=700&q=80" alt="Cleaning professional" />
+      </div>
+      <div class="carousel-dots">
+        <span class="dot active" onclick="goToSlide(0)"></span>
+        <span class="dot" onclick="goToSlide(1)"></span>
+        <span class="dot" onclick="goToSlide(2)"></span>
+      </div>
     </div>
   </section>
 
@@ -107,7 +108,7 @@
       <p>Abundios Cleaning is a local, trusted cleaning service based in Charlottesville, VA. We serve Charlottesville and all surrounding cities within a 1-hour radius.</p>
       <p>We take pride in leaving every home spotless, using safe and effective products. Your comfort and satisfaction are our priority.</p>
       <ul class="about-list">
-        <li>✔ Locally owned & operated</li>
+        <li>✔ Locally owned &amp; operated</li>
         <li>✔ Eco-friendly cleaning products</li>
         <li>✔ Flexible scheduling</li>
         <li>✔ Satisfaction guaranteed</li>
@@ -145,7 +146,7 @@
     <div class="section-inner">
       <div class="section-tag">Get in Touch</div>
       <h2>Ready to Book?</h2>
-      <p>Contact us today and we'll get your home sparkling clean.</p>
+      <p class="contact-sub">Contact us today and we'll get your home sparkling clean.</p>
       <div class="contact-cards">
         <a href="tel:4348257746" class="contact-card">
           <div class="contact-icon">📞</div>
@@ -172,7 +173,6 @@
   </footer>
 
   <script>
-    // Auto-redirect if logged in
     const token = localStorage.getItem('token');
     const role  = localStorage.getItem('role');
     if (token) {
@@ -180,30 +180,25 @@
       else window.location.href = 'https://portal.abundioscleaning.com/';
     }
 
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-    });
-
     // Carousel
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+    const imgs = document.querySelectorAll('.carousel-img');
     const dots = document.querySelectorAll('.dot');
 
     function goToSlide(n) {
-      slides[currentSlide].classList.remove('active');
-      dots[currentSlide].classList.remove('active');
-      currentSlide = n;
-      slides[currentSlide].classList.add('active');
-      dots[currentSlide].classList.add('active');
+      imgs[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = n;
+      imgs[current].classList.add('active');
+      dots[current].classList.add('active');
     }
 
-    setInterval(() => goToSlide((currentSlide + 1) % slides.length), 5000);
+    setInterval(() => goToSlide((current + 1) % imgs.length), 4000);
 
     // Fade-in on scroll
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.12 });
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>

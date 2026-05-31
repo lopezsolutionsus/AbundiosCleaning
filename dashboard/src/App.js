@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CalendarPage from './pages/CalendarPage';
 import ClientsPage from './pages/ClientsPage';
 import UsersPage from './pages/UsersPage';
+import ProfilePage from './pages/ProfilePage';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="clients" element={<ClientsPage />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

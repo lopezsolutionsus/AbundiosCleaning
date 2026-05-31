@@ -1,9 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom';
 
 export default function Layout() {
+  const firstName = localStorage.getItem('first_name') || 'User';
+  const role      = localStorage.getItem('role') || '';
+
   function logout() {
-    localStorage.removeItem('token');
-    window.location.href = '/login.html';
+    localStorage.clear();
+    window.location.href = '/login';
   }
 
   return (
@@ -13,9 +16,17 @@ export default function Layout() {
         <nav>
           <NavLink to="/calendar">🗓 Calendar</NavLink>
           <NavLink to="/clients">👥 Clients</NavLink>
-          <NavLink to="/users">🔑 Users</NavLink>
+          {role === 'admin' && <NavLink to="/users">🔑 Users</NavLink>}
         </nav>
-        <button className="sidebar-logout" onClick={logout}>← Log out</button>
+        <div style={{ marginTop: 'auto' }}>
+          <NavLink to="/profile" style={{ display:'flex', alignItems:'center', gap:'0.5rem', padding:'0.6rem 1rem', borderRadius:'0.5rem', textDecoration:'none', color:'#555', fontSize:'0.88rem' }}>
+            <span style={{ width:28, height:28, borderRadius:'50%', background:'#fde8ee', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'#E90A46', fontSize:'0.85rem' }}>
+              {firstName.charAt(0).toUpperCase()}
+            </span>
+            <span>{firstName}</span>
+          </NavLink>
+          <button className="sidebar-logout" onClick={logout}>← Log out</button>
+        </div>
       </aside>
       <main className="main-content">
         <Outlet />

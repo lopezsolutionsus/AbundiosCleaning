@@ -29,8 +29,11 @@ export const createClient = data => api.post('/clients', data);
 export const updateClient = (id, data) => api.put(`/clients/${id}`, data);
 export const deleteClient = id => api.delete(`/clients/${id}`);
 
-export const getUsers   = () => api.get('/auth/users');
-export const deleteUser = id => api.delete(`/auth/users/${id}`);
+export const getUsers      = () => api.get('/auth/users');
+export const deleteUser    = id => api.delete(`/auth/users/${id}`);
+export const getMe         = () => api.get('/auth/me');
+export const updateMe      = data => api.put('/auth/me', data);
+export const changePassword = data => api.put('/auth/me/password', data);
 
 export const getAppointments = (date) =>
   api.get('/appointments', { params: date ? { date } : {} });

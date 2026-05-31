@@ -377,5 +377,51 @@ def me(current_user=Depends(auth.get_current_user)):
         "first_name": current_user.first_name,
         "last_name": current_user.last_name,
         "role": current_user.role,
+        "phone": current_user.phone,
         "phone_verified": current_user.phone_verified,
+        "email_verified": current_user.email_verified,
     }
+
+
+class UpdateProfileForm(BaseModel):
+    first_name: str
+    last_name: Optional[str] = ""
+    email: str
+    phone: Optional[str] = ""
+
+class ChangePasswordForm(BaseModel):
+    current_password: str
+    new_password: str
+
+
+@router.put("/me")
+def update_me(form: UpdateProfileForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if form.email.lower() != current_user.email:
+        existing = db.query(models.User).filter(models.User.email == form.email.lower()).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already in use")
+        current_user.email = form.email.lower()
+    current_user.first_name = form.first_name
+    current_user.last_name  = form.last_name
+    current_user.phone      = form.phone
+    db.commit()
+    db.refresh(current_user)
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "first_name": current_user.first_name,
+        "last_name": current_user.last_name,
+        "role": current_user.role,
+        "phone": current_user.phone,
+    }
+
+
+@router.put("/me/password")
+def change_password(form: ChangePasswordForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if not current_user.hashed_password or not auth.verify_password(form.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if len(form.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+    current_user.hashed_password = auth.hash_password(form.new_password)
+    db.commit()
+    return {"message": "Password updated successfully"}

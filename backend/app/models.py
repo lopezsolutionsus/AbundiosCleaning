@@ -20,6 +20,7 @@ class User(Base):
     role            = Column(String, default="client")  # admin / staff / client
     google_id       = Column(String, nullable=True)
     phone_verified  = Column(Boolean, server_default="false", default=False)
+    email_verified  = Column(Boolean, server_default="true", default=False)
     created_at      = Column(DateTime, server_default=func.now())
 
     properties         = relationship("Property", back_populates="owner", cascade="all, delete")
@@ -152,6 +153,17 @@ class Review(Base):
 
 class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
+
+    id         = Column(String, primary_key=True, default=gen_id)
+    user_id    = Column(String, ForeignKey("users.id"), nullable=False)
+    token      = Column(String, unique=True, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used       = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class EmailVerificationToken(Base):
+    __tablename__ = "email_verification_tokens"
 
     id         = Column(String, primary_key=True, default=gen_id)
     user_id    = Column(String, ForeignKey("users.id"), nullable=False)

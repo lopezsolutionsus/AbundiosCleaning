@@ -5,8 +5,13 @@ from .routers import auth, clients, appointments, client as client_router
 from . import models
 from .auth import hash_password
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 Base.metadata.create_all(bind=engine)
+
+with engine.connect() as _conn:
+    _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT TRUE"))
+    _conn.commit()
 
 app = FastAPI(title="Abundios Cleaning API")
 
@@ -33,7 +38,8 @@ def seed_defaults():
             hashed_password=hash_password("lili1234"),
             first_name="Lili",
             last_name="Abundio-Alonso",
-            role="admin"
+            role="admin",
+            email_verified=True,
         ))
         db.commit()
 

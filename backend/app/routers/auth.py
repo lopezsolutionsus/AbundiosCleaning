@@ -66,6 +66,9 @@ class ResetPasswordForm(BaseModel):
     token: str
     password: str
 
+class VerifyEmailForm(BaseModel):
+    token: str
+
 
 @router.post("/login", response_model=Token)
 def login(form: LoginForm, db: Session = Depends(get_db)):
@@ -75,11 +78,42 @@ def login(form: LoginForm, db: Session = Depends(get_db)):
     ).first()
     if not user or not auth.verify_password(form.password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")
+    if not user.email_verified:
+        raise HTTPException(status_code=403, detail="Please verify your email before signing in. Check your inbox.")
     token = auth.create_access_token({"sub": user.email})
     return {"access_token": token, "token_type": "bearer", "role": user.role, "first_name": user.first_name, "phone_verified": True}
 
 
-@router.post("/register", response_model=Token)
+def _send_verification_email(to_email: str, verify_url: str, first_name: str):
+    if not SMTP_USER or not SMTP_PASS:
+        return
+    body = f"""Hi {first_name},
+
+Thanks for creating an account with Abundios Cleaning!
+
+Please verify your email address by clicking the link below (valid for 24 hours):
+
+{verify_url}
+
+If you didn't create an account, you can safely ignore this email.
+
+— Abundios Cleaning
+"""
+    msg = MIMEText(body)
+    msg["Subject"] = "Verify your Abundios Cleaning account"
+    msg["From"] = f"Abundios Cleaning <{SMTP_USER}>"
+    msg["To"] = to_email
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            server.sendmail(SMTP_USER, [to_email], msg.as_string())
+    except Exception:
+        pass
+
+
+@router.post("/register")
 def register(form: RegisterForm, db: Session = Depends(get_db)):
     existing = db.query(models.User).filter(models.User.email == form.email.lower()).first()
     if existing:
@@ -91,12 +125,25 @@ def register(form: RegisterForm, db: Session = Depends(get_db)):
         last_name=form.last_name,
         phone=form.phone,
         role="client",
+        email_verified=False,
     )
     db.add(user)
     db.commit()
     db.refresh(user)
-    token = auth.create_access_token({"sub": user.email})
-    return {"access_token": token, "token_type": "bearer", "role": user.role, "first_name": user.first_name, "phone_verified": True}
+
+    token = secrets.token_urlsafe(32)
+    verify_token = models.EmailVerificationToken(
+        user_id=user.id,
+        token=token,
+        expires_at=datetime.utcnow() + timedelta(hours=24),
+    )
+    db.add(verify_token)
+    db.commit()
+
+    verify_url = f"{APP_BASE_URL}/verify-email?token={token}"
+    _send_verification_email(user.email, verify_url, user.first_name)
+
+    return {"message": "verification_sent", "email": user.email}
 
 
 def _login_or_create_google_user(info: dict, db: Session):
@@ -120,6 +167,10 @@ def _login_or_create_google_user(info: dict, db: Session):
         db.refresh(user)
     elif not user.google_id:
         user.google_id = google_id
+        db.commit()
+
+    if not user.email_verified:
+        user.email_verified = True
         db.commit()
 
     return user
@@ -183,6 +234,27 @@ def verify_code(form: VerifyCodeForm, current_user=Depends(auth.get_current_user
     current_user.phone_verified = True
     db.commit()
     return {"message": "Phone verified"}
+
+
+@router.post("/verify-email")
+def verify_email_route(form: VerifyEmailForm, db: Session = Depends(get_db)):
+    record = db.query(models.EmailVerificationToken).filter(
+        models.EmailVerificationToken.token == form.token,
+        models.EmailVerificationToken.used == False,
+    ).first()
+    if not record or record.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Invalid or expired verification link.")
+
+    user = db.query(models.User).filter(models.User.id == record.user_id).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="User not found.")
+
+    user.email_verified = True
+    record.used = True
+    db.commit()
+
+    token = auth.create_access_token({"sub": user.email})
+    return {"access_token": token, "token_type": "bearer", "role": user.role, "first_name": user.first_name}
 
 
 def _send_reset_email(to_email: str, reset_url: str, first_name: str):

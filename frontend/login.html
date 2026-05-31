@@ -187,6 +187,10 @@
         });
 
         if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          errorMsg.textContent = res.status === 403
+            ? (data.detail || 'Please verify your email before signing in. Check your inbox.')
+            : 'Incorrect email/username or password.';
           errorMsg.style.display = 'block';
           return;
         }

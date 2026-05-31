@@ -689,6 +689,7 @@ nav {
 ───────────────────────────────────────────── */
 .contact-section {
   background: var(--dark);
+  color: white;
   padding: 6.5rem 2rem;
   text-align: center;
 }

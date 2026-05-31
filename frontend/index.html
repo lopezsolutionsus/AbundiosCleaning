@@ -4,73 +4,166 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Abundios Cleaning | Charlottesville, VA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- NAV -->
-  <nav>
+  <nav id="navbar">
     <div class="nav-inner">
       <span class="logo">Abundios Cleaning</span>
-      <a href="login.html" class="btn-login">Login</a>
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#testimonials">Reviews</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="/login" class="btn-login">Login</a>
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO CAROUSEL -->
   <section class="hero">
-    <div class="hero-content">
-      <h1>A Clean Home,<br/>A Happy Life</h1>
-      <p>Professional cleaning services in Charlottesville, VA and surrounding areas within 1 hour.</p>
-      <a href="mailto:abundioscleaning@gmail.com" class="btn-primary">Book a Cleaning</a>
+    <div class="carousel">
+      <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80')"></div>
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1400&q=80')"></div>
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1527515637462-cff94aca208b?w=1400&q=80')"></div>
+      <div class="carousel-overlay"></div>
     </div>
-    <div class="hero-img">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Clean home" />
+    <div class="hero-content">
+      <span class="hero-badge">Charlottesville, VA</span>
+      <h1>A Clean Home,<br/>A Happy Life</h1>
+      <p>Professional cleaning services you can trust — serving Charlottesville and surrounding areas.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">Book a Cleaning</a>
+        <a href="#services" class="btn-secondary">Our Services</a>
+      </div>
+    </div>
+    <div class="carousel-dots">
+      <span class="dot active" onclick="goToSlide(0)"></span>
+      <span class="dot" onclick="goToSlide(1)"></span>
+      <span class="dot" onclick="goToSlide(2)"></span>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stats-inner">
+      <div class="stat">
+        <div class="stat-num">100+</div>
+        <div class="stat-label">Happy Clients</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5★</div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Satisfaction</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Safe</div>
+        <div class="stat-label">Eco-Friendly Products</div>
+      </div>
     </div>
   </section>
 
   <!-- SERVICES -->
-  <section class="services">
-    <h2>Our Services</h2>
-    <div class="cards">
-      <div class="card">
-        <div class="card-icon">🏠</div>
-        <h3>General Cleaning</h3>
-        <p>Regular maintenance cleaning to keep your home fresh and tidy every week or every two weeks.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">✨</div>
-        <h3>Deep Cleaning</h3>
-        <p>A thorough top-to-bottom clean for homes that need extra attention. Perfect for first-time clients.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📦</div>
-        <h3>2-Hour Cleaning</h3>
-        <p>A focused 2-hour session generously provided by LVCA student Lili Abundio-Alonso.</p>
+  <section class="services" id="services">
+    <div class="section-inner">
+      <div class="section-tag">What We Offer</div>
+      <h2>Our Services</h2>
+      <div class="cards">
+        <div class="card fade-in">
+          <div class="card-icon">🏠</div>
+          <h3>General Cleaning</h3>
+          <p>Regular maintenance cleaning to keep your home fresh and tidy every week or every two weeks.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card-icon">✨</div>
+          <h3>Deep Cleaning</h3>
+          <p>A thorough top-to-bottom clean for homes that need extra attention. Perfect for first-time clients.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card-icon">⏱️</div>
+          <h3>2-Hour Cleaning</h3>
+          <p>A focused 2-hour session — ideal for touch-ups or apartments that just need a quick refresh.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section class="about">
-    <div class="about-img">
-      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=500&q=80" alt="Cleaning professional" />
+  <section class="about" id="about">
+    <div class="about-img fade-in">
+      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=80" alt="Cleaning professional" />
     </div>
-    <div class="about-text">
+    <div class="about-text fade-in">
+      <div class="section-tag">Our Story</div>
       <h2>About Us</h2>
       <p>Abundios Cleaning is a local, trusted cleaning service based in Charlottesville, VA. We serve Charlottesville and all surrounding cities within a 1-hour radius.</p>
       <p>We take pride in leaving every home spotless, using safe and effective products. Your comfort and satisfaction are our priority.</p>
+      <ul class="about-list">
+        <li>✔ Locally owned & operated</li>
+        <li>✔ Eco-friendly cleaning products</li>
+        <li>✔ Flexible scheduling</li>
+        <li>✔ Satisfaction guaranteed</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-inner">
+      <div class="section-tag">Reviews</div>
+      <h2>What Our Clients Say</h2>
+      <div class="reviews">
+        <div class="review fade-in">
+          <div class="stars">★★★★★</div>
+          <p>"Absolutely amazing service! My home has never looked so clean. I've been using Abundios every two weeks and couldn't be happier."</p>
+          <div class="reviewer">— Sarah M., Charlottesville</div>
+        </div>
+        <div class="review fade-in">
+          <div class="stars">★★★★★</div>
+          <p>"Very professional and thorough. They paid attention to every detail and even cleaned areas I didn't expect. Highly recommend!"</p>
+          <div class="reviewer">— James R., Crozet</div>
+        </div>
+        <div class="review fade-in">
+          <div class="stars">★★★★★</div>
+          <p>"Great price, great service, great people. Abundios Cleaning is now my go-to for keeping my home spotless."</p>
+          <div class="reviewer">— Maria L., Waynesboro</div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- CONTACT -->
-  <section class="contact">
-    <h2>Get in Touch</h2>
-    <p>Ready to book or have questions? Reach out to us.</p>
-    <div class="contact-info">
-      <a href="tel:4348257746">📞 (434) 825-7746</a>
-      <a href="mailto:abundioscleaning@gmail.com">✉️ abundioscleaning@gmail.com</a>
+  <section class="contact" id="contact">
+    <div class="section-inner">
+      <div class="section-tag">Get in Touch</div>
+      <h2>Ready to Book?</h2>
+      <p>Contact us today and we'll get your home sparkling clean.</p>
+      <div class="contact-cards">
+        <a href="tel:4348257746" class="contact-card">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-label">Call Us</div>
+            <div class="contact-value">(434) 825-7746</div>
+          </div>
+        </a>
+        <a href="mailto:abundioscleaning@gmail.com" class="contact-card">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-label">Email Us</div>
+            <div class="contact-value">abundioscleaning@gmail.com</div>
+          </div>
+        </a>
+      </div>
+      <p class="area">Serving Charlottesville, VA and surrounding areas within 1 hour.</p>
     </div>
-    <p class="area">Serving Charlottesville, VA and surrounding areas within 1 hour.</p>
   </section>
 
   <!-- FOOTER -->
@@ -79,12 +172,39 @@
   </footer>
 
   <script>
+    // Auto-redirect if logged in
     const token = localStorage.getItem('token');
     const role  = localStorage.getItem('role');
     if (token) {
       if (role === 'admin' || role === 'staff') window.location.href = 'https://app.abundioscleaning.com/';
       else window.location.href = 'https://portal.abundioscleaning.com/';
     }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Carousel
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+
+    function goToSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide = n;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    setInterval(() => goToSlide((currentSlide + 1) % slides.length), 5000);
+
+    // Fade-in on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>

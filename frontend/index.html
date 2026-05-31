@@ -14,56 +14,54 @@
   <!-- NAV -->
   <nav>
     <div class="nav-inner">
-      <a href="/" class="logo"><img src="logo.svg" alt="Abundios Cleaning" style="height:48px;width:auto;display:block" /></a>
+      <a href="/" class="logo-link">
+        <img src="logo.svg" alt="Abundios Cleaning" style="height:48px;width:auto;display:block" />
+      </a>
       <div class="nav-links">
         <a href="#services">Services</a>
+        <a href="#process">Process</a>
         <a href="#about">About</a>
-        <a href="#testimonials">Reviews</a>
+        <a href="#reviews">Reviews</a>
         <a href="#contact">Contact</a>
       </div>
-      <a href="https://app.abundioscleaning.com/login" class="btn-login">Login</a>
+      <a href="https://app.abundioscleaning.com/login" class="btn-nav">Login</a>
     </div>
   </nav>
 
   <!-- HERO -->
-  <section class="hero-section">
-    <div class="hero-bg-circle hero-bg-circle-1"></div>
-    <div class="hero-bg-circle hero-bg-circle-2"></div>
+  <section class="hero">
     <div class="hero-inner">
       <div class="hero-text">
-        <span class="hero-badge">Charlottesville, VA</span>
-        <h1>A Clean Home,<br/><em>A Happy Life</em></h1>
-        <p>Professional cleaning services you can trust — serving Charlottesville and surrounding areas with care and dedication.</p>
+        <span class="hero-badge">📍 Charlottesville, VA</span>
+        <h1>A Clean Home,<br/><em>An Abundant Life</em></h1>
+        <p>Professional, eco-friendly cleaning services trusted by 100+ families across Charlottesville and surrounding areas.</p>
         <div class="hero-btns">
           <a href="#contact" class="btn-primary">Book a Cleaning</a>
-          <a href="#services" class="btn-outline">Our Services</a>
+          <a href="#services" class="btn-ghost">Our Services</a>
         </div>
-        <div class="hero-trust">
-          <span class="trust-item">⭐⭐⭐⭐⭐ 5.0 Rating</span>
-          <span class="trust-dot">·</span>
-          <span class="trust-item">100+ Happy Clients</span>
-          <span class="trust-dot">·</span>
-          <span class="trust-item">Locally Owned</span>
+        <div class="hero-chips">
+          <span class="chip">⭐ 5.0 Rating</span>
+          <span class="chip">🏡 100+ Clients</span>
+          <span class="chip">🌿 Eco-Friendly</span>
         </div>
       </div>
+
       <div class="hero-visual">
-        <div class="hero-img-frame">
-          <div class="hero-carousel-wrap">
-            <img id="heroSlide"
-                 src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80"
-                 alt="Clean living room" />
-            <div class="carousel-dots">
-              <span class="dot active" data-idx="0"></span>
-              <span class="dot" data-idx="1"></span>
-              <span class="dot" data-idx="2"></span>
-            </div>
+        <div class="hero-carousel">
+          <img id="heroSlide"
+               src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=750&q=85"
+               alt="Clean living room" />
+          <div class="carousel-dots">
+            <span class="dot active" data-idx="0"></span>
+            <span class="dot" data-idx="1"></span>
+            <span class="dot" data-idx="2"></span>
           </div>
-          <div class="hero-float-card">
-            <span class="float-icon">🌿</span>
-            <div>
-              <div class="float-title">Eco-Friendly</div>
-              <div class="float-sub">Safe for your family &amp; pets</div>
-            </div>
+        </div>
+        <div class="hero-float">
+          <span class="hero-float-icon">✨</span>
+          <div>
+            <div class="hero-float-num">100%</div>
+            <div class="hero-float-label">Satisfaction Guaranteed</div>
           </div>
         </div>
       </div>
@@ -74,122 +72,195 @@
   <section class="stats">
     <div class="stats-inner">
       <div class="stat">
-        <div class="stat-num">100+</div>
-        <div class="stat-label">Happy Clients</div>
+        <div class="stat-num">100<span>+</span></div>
+        <div class="stat-lbl">Happy Clients</div>
       </div>
+      <div class="stat-divider"></div>
       <div class="stat">
-        <div class="stat-num">5★</div>
-        <div class="stat-label">Average Rating</div>
+        <div class="stat-num">5.0<span>★</span></div>
+        <div class="stat-lbl">Average Rating</div>
       </div>
+      <div class="stat-divider"></div>
       <div class="stat">
-        <div class="stat-num">100%</div>
-        <div class="stat-label">Satisfaction</div>
+        <div class="stat-num">100<span>%</span></div>
+        <div class="stat-lbl">Satisfaction Rate</div>
       </div>
+      <div class="stat-divider"></div>
       <div class="stat">
-        <div class="stat-num">Safe</div>
-        <div class="stat-label">Eco-Friendly Products</div>
+        <div class="stat-num">1<span>hr</span></div>
+        <div class="stat-lbl">Service Radius</div>
       </div>
     </div>
   </section>
 
   <!-- SERVICES -->
-  <section class="services" id="services">
+  <section id="services" class="section bg-alt">
     <div class="section-inner">
-      <div class="section-tag">What We Offer</div>
-      <h2>Our Services</h2>
+      <p class="s-tag">What We Offer</p>
+      <h2>Our Cleaning Services</h2>
+      <p class="s-sub">Every visit is performed with care, detail, and eco-friendly products that are safe for your family and pets.</p>
       <div class="cards">
         <div class="card fade-in">
-          <div class="card-icon">🏠</div>
+          <div class="card-ico">🏠</div>
           <h3>General Cleaning</h3>
-          <p>Regular maintenance cleaning to keep your home fresh and tidy every week or every two weeks.</p>
+          <p>Regular maintenance cleaning to keep your home fresh and tidy — weekly or bi-weekly schedules available.</p>
+          <div class="card-tag">Most Popular</div>
         </div>
-        <div class="card fade-in">
-          <div class="card-icon">✨</div>
+        <div class="card card-highlight fade-in">
+          <div class="card-ico">✨</div>
           <h3>Deep Cleaning</h3>
-          <p>A thorough top-to-bottom clean for homes that need extra attention. Perfect for first-time clients.</p>
+          <p>A thorough top-to-bottom clean for homes that need extra attention. The perfect starting point for new clients.</p>
+          <div class="card-tag">Recommended First</div>
         </div>
         <div class="card fade-in">
-          <div class="card-icon">⏱️</div>
+          <div class="card-ico">⏱️</div>
           <h3>2-Hour Cleaning</h3>
-          <p>A focused 2-hour session — ideal for touch-ups or apartments that just need a quick refresh.</p>
+          <p>A focused 2-hour session — ideal for touch-ups, apartments, or spaces that just need a quick refresh.</p>
+          <div class="card-tag">Quick &amp; Efficient</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="process" class="section bg-white">
+    <div class="section-inner">
+      <p class="s-tag">The Process</p>
+      <h2>How It Works</h2>
+      <p class="s-sub">Getting a spotless home is simple. Three easy steps and we handle everything.</p>
+      <div class="steps">
+        <div class="step fade-in">
+          <div class="step-num">01</div>
+          <h3>Book Online or Call</h3>
+          <p>Reach out via phone or email to pick your preferred date, time, and service type.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step fade-in">
+          <div class="step-num">02</div>
+          <h3>We Come to You</h3>
+          <p>Our professional team arrives on time with all supplies and eco-friendly cleaning products.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step fade-in">
+          <div class="step-num">03</div>
+          <h3>Enjoy Your Home</h3>
+          <p>Relax in a spotless, fresh-smelling home. We guarantee your satisfaction every time.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ABOUT -->
-  <section class="about" id="about">
-    <div class="about-img fade-in">
-      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=80" alt="Cleaning professional" />
-    </div>
-    <div class="about-text fade-in">
-      <div class="section-tag">Our Story</div>
-      <h2>About Us</h2>
-      <p>Abundios Cleaning is a local, trusted cleaning service based in Charlottesville, VA. We serve Charlottesville and all surrounding cities within a 1-hour radius.</p>
-      <p>We take pride in leaving every home spotless, using safe and effective products. Your comfort and satisfaction are our priority.</p>
-      <ul class="about-list">
-        <li>✔ Locally owned &amp; operated</li>
-        <li>✔ Eco-friendly cleaning products</li>
-        <li>✔ Flexible scheduling</li>
-        <li>✔ Satisfaction guaranteed</li>
-      </ul>
+  <section id="about" class="about-section">
+    <div class="about-inner">
+      <div class="about-img fade-in">
+        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=650&q=85" alt="Professional cleaning" />
+        <div class="about-badge">
+          <div class="about-badge-num">3+</div>
+          <div class="about-badge-lbl">Years Serving<br/>Charlottesville</div>
+        </div>
+      </div>
+      <div class="about-text fade-in">
+        <p class="s-tag">Our Story</p>
+        <h2>Local, Trusted &amp; Passionate About Clean</h2>
+        <p>Abundios Cleaning is a locally owned service based in Charlottesville, VA. We serve Charlottesville and all surrounding cities within a 1-hour radius — from Crozet to Waynesboro and beyond.</p>
+        <p>We believe a clean home is a happy home. That's why we use safe, eco-friendly products and treat every home as if it were our own.</p>
+        <ul class="about-list">
+          <li><span class="chk">✔</span> Locally owned &amp; operated</li>
+          <li><span class="chk">✔</span> Eco-friendly cleaning products</li>
+          <li><span class="chk">✔</span> Flexible scheduling to fit your life</li>
+          <li><span class="chk">✔</span> 100% satisfaction guaranteed</li>
+        </ul>
+        <a href="#contact" class="btn-primary btn-mt">Get a Free Quote</a>
+      </div>
     </div>
   </section>
 
   <!-- TESTIMONIALS -->
-  <section class="testimonials" id="testimonials">
+  <section id="reviews" class="section bg-alt">
     <div class="section-inner">
-      <div class="section-tag">Reviews</div>
+      <p class="s-tag">Reviews</p>
       <h2>What Our Clients Say</h2>
+      <p class="s-sub">Don't take our word for it — here's what Charlottesville families are saying.</p>
       <div class="reviews">
         <div class="review fade-in">
-          <div class="stars">★★★★★</div>
+          <div class="review-top">
+            <div class="avatar">S</div>
+            <div>
+              <div class="rname">Sarah M.</div>
+              <div class="rloc">Charlottesville, VA</div>
+            </div>
+            <div class="stars">★★★★★</div>
+          </div>
           <p>"Absolutely amazing service! My home has never looked so clean. I've been using Abundios every two weeks and couldn't be happier."</p>
-          <div class="reviewer">— Sarah M., Charlottesville</div>
         </div>
         <div class="review fade-in">
-          <div class="stars">★★★★★</div>
+          <div class="review-top">
+            <div class="avatar">J</div>
+            <div>
+              <div class="rname">James R.</div>
+              <div class="rloc">Crozet, VA</div>
+            </div>
+            <div class="stars">★★★★★</div>
+          </div>
           <p>"Very professional and thorough. They paid attention to every detail and even cleaned areas I didn't expect. Highly recommend!"</p>
-          <div class="reviewer">— James R., Crozet</div>
         </div>
         <div class="review fade-in">
-          <div class="stars">★★★★★</div>
+          <div class="review-top">
+            <div class="avatar">M</div>
+            <div>
+              <div class="rname">Maria L.</div>
+              <div class="rloc">Waynesboro, VA</div>
+            </div>
+            <div class="stars">★★★★★</div>
+          </div>
           <p>"Great price, great service, great people. Abundios Cleaning is now my go-to for keeping my home spotless."</p>
-          <div class="reviewer">— Maria L., Waynesboro</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CONTACT -->
-  <section class="contact" id="contact">
-    <div class="section-inner">
-      <div class="section-tag">Get in Touch</div>
-      <h2>Ready to Book?</h2>
-      <p class="contact-sub">Contact us today and we'll get your home sparkling clean.</p>
-      <div class="contact-cards">
-        <a href="tel:4348257746" class="contact-card">
-          <div class="contact-icon">📞</div>
+  <section id="contact" class="contact-section">
+    <div class="contact-inner">
+      <p class="s-tag-light">Get in Touch</p>
+      <h2>Ready for a Spotless Home?</h2>
+      <p class="contact-sub">Contact us today and we'll get back to you quickly to schedule your first cleaning.</p>
+      <div class="contact-methods">
+        <a href="tel:4348257746" class="cmethod">
+          <span class="cmethod-ico">📞</span>
           <div>
-            <div class="contact-label">Call Us</div>
-            <div class="contact-value">(434) 825-7746</div>
+            <div class="cmethod-lbl">Call Us</div>
+            <div class="cmethod-val">(434) 825-7746</div>
           </div>
         </a>
-        <a href="mailto:lily@abundioscleaning.com" class="contact-card">
-          <div class="contact-icon">✉️</div>
+        <a href="mailto:lily@abundioscleaning.com" class="cmethod">
+          <span class="cmethod-ico">✉️</span>
           <div>
-            <div class="contact-label">Email Us</div>
-            <div class="contact-value">lily@abundioscleaning.com</div>
+            <div class="cmethod-lbl">Email Us</div>
+            <div class="cmethod-val">lily@abundioscleaning.com</div>
           </div>
         </a>
       </div>
-      <p class="area">Serving Charlottesville, VA and surrounding areas within 1 hour.</p>
+      <p class="svc-area">Serving Charlottesville, VA and surrounding areas within 1 hour</p>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2026 Abundios Cleaning · Charlottesville, VA</p>
+    <div class="footer-inner">
+      <img src="logo.svg" alt="Abundios Cleaning"
+           style="height:38px;width:auto;display:block;filter:brightness(0) invert(1);opacity:0.7" />
+      <div class="footer-links">
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#about">About</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#contact">Contact</a>
+        <a href="https://app.abundioscleaning.com/login">Login</a>
+      </div>
+      <p class="footer-copy">© 2026 Abundios Cleaning · Charlottesville, VA</p>
+    </div>
   </footer>
 
   <script>
@@ -202,9 +273,9 @@
 
     // Carousel
     const slides = [
-      { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80', alt: 'Clean living room' },
-      { src: 'https://images.unsplash.com/photo-1527515637462-cff94aca208b?w=700&q=80', alt: 'Clean kitchen' },
-      { src: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=700&q=80', alt: 'Professional cleaning' },
+      { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=750&q=85', alt: 'Clean living room' },
+      { src: 'https://images.unsplash.com/photo-1527515637462-cff94aca208b?w=750&q=85', alt: 'Clean kitchen' },
+      { src: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=750&q=85', alt: 'Professional cleaning' },
     ];
     let current = 0;
     const heroImg = document.getElementById('heroSlide');
@@ -214,21 +285,21 @@
       heroImg.style.opacity = '0';
       setTimeout(() => {
         current = n;
-        heroImg.src = slides[n].src;
-        heroImg.alt = slides[n].alt;
+        heroImg.src  = slides[n].src;
+        heroImg.alt  = slides[n].alt;
         heroImg.style.opacity = '1';
         dots.forEach((d, i) => d.classList.toggle('active', i === n));
       }, 450);
     }
 
     dots.forEach(d => d.addEventListener('click', () => goToSlide(+d.dataset.idx)));
-    setInterval(() => goToSlide((current + 1) % slides.length), 4000);
+    setInterval(() => goToSlide((current + 1) % slides.length), 4500);
 
-    // Fade-in on scroll
-    const observer = new IntersectionObserver(entries => {
+    // Scroll fade-in
+    const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
   </script>
 </body>
 </html>

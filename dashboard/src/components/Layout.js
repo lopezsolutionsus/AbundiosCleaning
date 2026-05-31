@@ -13,6 +13,7 @@ export default function Layout() {
         <nav>
           <NavLink to="/calendar">🗓 Calendar</NavLink>
           <NavLink to="/clients">👥 Clients</NavLink>
+          <NavLink to="/users">🔑 Users</NavLink>
         </nav>
         <button className="sidebar-logout" onClick={logout}>← Log out</button>
       </aside>

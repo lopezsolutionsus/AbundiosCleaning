@@ -336,6 +336,39 @@ def reset_password(form: ResetPasswordForm, db: Session = Depends(get_db)):
     return {"message": "Password updated successfully."}
 
 
+@router.get("/users")
+def list_users(current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admins only")
+    users = db.query(models.User).order_by(models.User.created_at.desc()).all()
+    return [
+        {
+            "id": u.id,
+            "email": u.email,
+            "first_name": u.first_name,
+            "last_name": u.last_name,
+            "role": u.role,
+            "email_verified": u.email_verified,
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+        }
+        for u in users
+    ]
+
+
+@router.delete("/users/{user_id}")
+def delete_user(user_id: str, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admins only")
+    if user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="You cannot delete your own account")
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.delete(user)
+    db.commit()
+    return {"ok": True}
+
+
 @router.get("/me")
 def me(current_user=Depends(auth.get_current_user)):
     return {

@@ -29,6 +29,9 @@ export const createClient = data => api.post('/clients', data);
 export const updateClient = (id, data) => api.put(`/clients/${id}`, data);
 export const deleteClient = id => api.delete(`/clients/${id}`);
 
+export const getUsers   = () => api.get('/auth/users');
+export const deleteUser = id => api.delete(`/auth/users/${id}`);
+
 export const getAppointments = (date) =>
   api.get('/appointments', { params: date ? { date } : {} });
 export const createAppointment = data => api.post('/appointments', data);

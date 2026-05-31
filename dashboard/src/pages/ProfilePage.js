@@ -11,17 +11,20 @@ export default function ProfilePage() {
   const [pwMsg, setPwMsg]           = useState(null);
   const [saving, setSaving]         = useState(false);
   const [savingPw, setSavingPw]     = useState(false);
+  const [loadError, setLoadError]   = useState(false);
 
   useEffect(() => {
-    getMe().then(r => {
-      setUser(r.data);
-      setProfile({
-        first_name: r.data.first_name || '',
-        last_name:  r.data.last_name  || '',
-        email:      r.data.email      || '',
-        phone:      r.data.phone      || '',
-      });
-    });
+    getMe()
+      .then(r => {
+        setUser(r.data);
+        setProfile({
+          first_name: r.data.first_name || '',
+          last_name:  r.data.last_name  || '',
+          email:      r.data.email      || '',
+          phone:      r.data.phone      || '',
+        });
+      })
+      .catch(() => setLoadError(true));
   }, []);
 
   async function handleProfileSave(e) {
@@ -61,7 +64,8 @@ export default function ProfilePage() {
     setSavingPw(false);
   }
 
-  if (!user) return <div style={{ padding: '2rem', color: '#888' }}>Loading...</div>;
+  if (loadError) return <div style={{ padding: '2rem', color: '#c0392b' }}>Could not load profile. Try refreshing the page.</div>;
+  if (!user)     return <div style={{ padding: '2rem', color: '#888' }}>Loading...</div>;
 
   return (
     <div style={{ maxWidth: 560, padding: '2rem' }}>

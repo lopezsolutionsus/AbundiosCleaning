@@ -148,3 +148,14 @@ class Review(Base):
 
     appointment = relationship("Appointment", back_populates="review")
     author      = relationship("User", back_populates="reviews")
+
+
+class PasswordResetToken(Base):
+    __tablename__ = "password_reset_tokens"
+
+    id         = Column(String, primary_key=True, default=gen_id)
+    user_id    = Column(String, ForeignKey("users.id"), nullable=False)
+    token      = Column(String, unique=True, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used       = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())

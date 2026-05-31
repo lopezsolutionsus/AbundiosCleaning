@@ -8,6 +8,10 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 import requests as http_requests
 import os
+import secrets
+import smtplib
+from email.mime.text import MIMEText
+from datetime import datetime, timedelta
 from twilio.rest import Client as TwilioClient
 
 GOOGLE_CLIENT_ID = "52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com"
@@ -17,6 +21,12 @@ GOOGLE_REDIRECT_URI = "https://app.abundioscleaning.com/auth/google/callback"
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN  = os.environ.get("TWILIO_AUTH_TOKEN", "")
 TWILIO_VERIFY_SID  = os.environ.get("TWILIO_VERIFY_SID", "")
+
+SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASS = os.environ.get("SMTP_PASS", "")
+APP_BASE_URL = os.environ.get("APP_BASE_URL", "https://app.abundioscleaning.com")
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -48,6 +58,13 @@ class SendCodeForm(BaseModel):
 class VerifyCodeForm(BaseModel):
     phone: str
     code: str
+
+class ForgotPasswordForm(BaseModel):
+    email: str
+
+class ResetPasswordForm(BaseModel):
+    token: str
+    password: str
 
 
 @router.post("/login", response_model=Token)
@@ -166,6 +183,85 @@ def verify_code(form: VerifyCodeForm, current_user=Depends(auth.get_current_user
     current_user.phone_verified = True
     db.commit()
     return {"message": "Phone verified"}
+
+
+def _send_reset_email(to_email: str, reset_url: str, first_name: str):
+    if not SMTP_USER or not SMTP_PASS:
+        return
+    body = f"""Hi {first_name},
+
+We received a request to reset your Abundios Cleaning password.
+
+Click the link below to set a new password (valid for 1 hour):
+
+{reset_url}
+
+If you didn't request this, you can safely ignore this email.
+
+— Abundios Cleaning
+"""
+    msg = MIMEText(body)
+    msg["Subject"] = "Reset your Abundios Cleaning password"
+    msg["From"] = f"Abundios Cleaning <{SMTP_USER}>"
+    msg["To"] = to_email
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            server.sendmail(SMTP_USER, [to_email], msg.as_string())
+    except Exception:
+        pass  # Don't leak email errors to the client
+
+
+@router.post("/forgot-password")
+def forgot_password(form: ForgotPasswordForm, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == form.email.lower()).first()
+    # Always return 200 to avoid email enumeration
+    if not user or not user.hashed_password:
+        return {"message": "If that email is registered, you will receive a reset link shortly."}
+
+    # Invalidate old tokens
+    db.query(models.PasswordResetToken).filter(
+        models.PasswordResetToken.user_id == user.id,
+        models.PasswordResetToken.used == False,
+    ).update({"used": True})
+
+    token = secrets.token_urlsafe(32)
+    reset_token = models.PasswordResetToken(
+        user_id=user.id,
+        token=token,
+        expires_at=datetime.utcnow() + timedelta(hours=1),
+    )
+    db.add(reset_token)
+    db.commit()
+
+    reset_url = f"{APP_BASE_URL}/reset-password?token={token}"
+    _send_reset_email(user.email, reset_url, user.first_name)
+
+    return {"message": "If that email is registered, you will receive a reset link shortly."}
+
+
+@router.post("/reset-password")
+def reset_password(form: ResetPasswordForm, db: Session = Depends(get_db)):
+    record = db.query(models.PasswordResetToken).filter(
+        models.PasswordResetToken.token == form.token,
+        models.PasswordResetToken.used == False,
+    ).first()
+    if not record or record.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Invalid or expired reset link.")
+
+    if len(form.password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters.")
+
+    user = db.query(models.User).filter(models.User.id == record.user_id).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="User not found.")
+
+    user.hashed_password = auth.hash_password(form.password)
+    record.used = True
+    db.commit()
+    return {"message": "Password updated successfully."}
 
 
 @router.get("/me")

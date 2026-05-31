@@ -48,7 +48,16 @@
       </div>
       <div class="hero-visual">
         <div class="hero-img-frame">
-          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Clean bright living room" />
+          <div class="hero-carousel-wrap">
+            <img id="heroSlide"
+                 src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80"
+                 alt="Clean living room" />
+            <div class="carousel-dots">
+              <span class="dot active" data-idx="0"></span>
+              <span class="dot" data-idx="1"></span>
+              <span class="dot" data-idx="2"></span>
+            </div>
+          </div>
           <div class="hero-float-card">
             <span class="float-icon">🌿</span>
             <div>
@@ -166,11 +175,11 @@
             <div class="contact-value">(434) 825-7746</div>
           </div>
         </a>
-        <a href="mailto:abundioscleaning@gmail.com" class="contact-card">
+        <a href="mailto:lily@abundioscleaning.com" class="contact-card">
           <div class="contact-icon">✉️</div>
           <div>
             <div class="contact-label">Email Us</div>
-            <div class="contact-value">abundioscleaning@gmail.com</div>
+            <div class="contact-value">lily@abundioscleaning.com</div>
           </div>
         </a>
       </div>
@@ -191,6 +200,31 @@
       else window.location.href = 'https://portal.abundioscleaning.com/';
     }
 
+    // Carousel
+    const slides = [
+      { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80', alt: 'Clean living room' },
+      { src: 'https://images.unsplash.com/photo-1527515637462-cff94aca208b?w=700&q=80', alt: 'Clean kitchen' },
+      { src: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=700&q=80', alt: 'Professional cleaning' },
+    ];
+    let current = 0;
+    const heroImg = document.getElementById('heroSlide');
+    const dots    = document.querySelectorAll('.dot');
+
+    function goToSlide(n) {
+      heroImg.style.opacity = '0';
+      setTimeout(() => {
+        current = n;
+        heroImg.src = slides[n].src;
+        heroImg.alt = slides[n].alt;
+        heroImg.style.opacity = '1';
+        dots.forEach((d, i) => d.classList.toggle('active', i === n));
+      }, 450);
+    }
+
+    dots.forEach(d => d.addEventListener('click', () => goToSlide(+d.dataset.idx)));
+    setInterval(() => goToSlide((current + 1) % slides.length), 4000);
+
+    // Fade-in on scroll
     const observer = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.12 });

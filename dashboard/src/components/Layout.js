@@ -13,8 +13,8 @@ export default function Layout() {
     <div className="layout">
       <aside className="sidebar">
         <div className="sidebar-logo">Abundios Cleaning</div>
-        <NavLink to="/profile" style={{ display:'flex', alignItems:'center', gap:'0.5rem', padding:'0.6rem 1rem', borderRadius:'0.5rem', textDecoration:'none', color:'#555', fontSize:'0.88rem', marginBottom:'0.5rem' }}>
-          <span style={{ width:30, height:30, borderRadius:'50%', background:'#fde8ee', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'#E90A46', fontSize:'0.9rem', flexShrink:0 }}>
+        <NavLink to="/profile" style={{ display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.65rem 0.75rem', borderRadius:'0.75rem', textDecoration:'none', color:'#666', fontSize:'0.95rem', marginBottom:'0.75rem' }}>
+          <span style={{ width:28, height:28, borderRadius:'50%', background:'#fde8ee', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'#E90A46', fontSize:'0.85rem', flexShrink:0 }}>
             {firstName.charAt(0).toUpperCase()}
           </span>
           <div style={{ lineHeight:1.2 }}>

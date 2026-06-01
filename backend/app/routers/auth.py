@@ -337,6 +337,18 @@ def reset_password(form: ResetPasswordForm, db: Session = Depends(get_db)):
     return {"message": "Password updated successfully."}
 
 
+@router.get("/clients/upcoming-appointments")
+def clients_with_upcoming(current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admins only")
+    from datetime import date
+    today = str(date.today())
+    rows = db.query(models.Appointment.user_id).filter(
+        models.Appointment.date >= today
+    ).distinct().all()
+    return [r[0] for r in rows]
+
+
 @router.get("/users")
 def list_users(current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
     if current_user.role != "admin":

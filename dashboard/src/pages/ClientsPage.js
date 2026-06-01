@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getUsers, deleteUser, adminUpdateUser } from '../services/api';
+import { getUsers, deleteUser, adminUpdateUser, getClientsWithUpcoming } from '../services/api';
 
 const InfoIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -17,10 +17,12 @@ const PencilIcon = () => (
 const EMPTY_FORM = { first_name: '', last_name: '', email: '', phone: '', zip_code: '', city: '', county: '' };
 
 export default function ClientsPage() {
-  const [clients, setClients]           = useState([]);
-  const [filterCity, setFilterCity]     = useState('');
-  const [filterCounty, setFilterCounty] = useState('');
-  const [selected, setSelected]         = useState(null);
+  const [clients, setClients]             = useState([]);
+  const [upcomingIds, setUpcomingIds]     = useState(new Set());
+  const [filterCity, setFilterCity]       = useState('');
+  const [filterCounty, setFilterCounty]   = useState('');
+  const [filterUpcoming, setFilterUpcoming] = useState(false);
+  const [selected, setSelected]           = useState(null);
   const [editing, setEditing]           = useState(false);
   const [form, setForm]                 = useState(EMPTY_FORM);
   const [saving, setSaving]             = useState(false);
@@ -30,6 +32,7 @@ export default function ClientsPage() {
 
   useEffect(() => {
     getUsers().then(r => setClients(r.data.filter(u => u.role === 'client')));
+    getClientsWithUpcoming().then(r => setUpcomingIds(new Set(r.data)));
   }, []);
 
   // Unique sorted values for filter dropdowns
@@ -37,8 +40,9 @@ export default function ClientsPage() {
   const counties = [...new Set(clients.map(c => c.county).filter(Boolean))].sort();
 
   const filtered = clients.filter(c => {
-    if (filterCity   && c.city   !== filterCity)   return false;
-    if (filterCounty && c.county !== filterCounty) return false;
+    if (filterCity     && c.city   !== filterCity)   return false;
+    if (filterCounty   && c.county !== filterCounty) return false;
+    if (filterUpcoming && !upcomingIds.has(c.id))    return false;
     return true;
   });
 
@@ -106,29 +110,24 @@ export default function ClientsPage() {
     <div className="clients-wrap">
       {/* Header + filters */}
       <div className="clients-header">
-        <h2>Clients ({clients.length})</h2>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <select
-            className="filter-select"
-            value={filterCity}
-            onChange={e => setFilterCity(e.target.value)}
-          >
+        <h2>Clients ({filtered.length}{filtered.length !== clients.length ? ` of ${clients.length}` : ''})</h2>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <select className="filter-select" value={filterCity} onChange={e => setFilterCity(e.target.value)}>
             <option value="">All cities</option>
             {cities.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-          <select
-            className="filter-select"
-            value={filterCounty}
-            onChange={e => setFilterCounty(e.target.value)}
-          >
+          <select className="filter-select" value={filterCounty} onChange={e => setFilterCounty(e.target.value)}>
             <option value="">All counties</option>
             {counties.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-          {(filterCity || filterCounty) && (
-            <button
-              className="filter-clear"
-              onClick={() => { setFilterCity(''); setFilterCounty(''); }}
-            >
+          <label className="toggle-label">
+            <div className={`toggle-switch ${filterUpcoming ? 'on' : ''}`} onClick={() => setFilterUpcoming(v => !v)}>
+              <div className="toggle-thumb" />
+            </div>
+            <span>Upcoming appt.</span>
+          </label>
+          {(filterCity || filterCounty || filterUpcoming) && (
+            <button className="filter-clear" onClick={() => { setFilterCity(''); setFilterCounty(''); setFilterUpcoming(false); }}>
               Clear
             </button>
           )}

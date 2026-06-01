@@ -52,9 +52,9 @@ export default function Layout() {
         <nav>
           <NavLink to="/calendar"><CalendarIcon /> Calendar</NavLink>
           <NavLink to="/add-appointment"><AddIcon /> Add Appointment</NavLink>
-          <NavLink to="/profile"><ProfileIcon /> Profile</NavLink>
           <NavLink to="/clients"><ClientsIcon /> Clients</NavLink>
           {role === 'admin' && <NavLink to="/users"><StaffIcon /> Staff</NavLink>}
+          <NavLink to="/profile"><ProfileIcon /> Profile</NavLink>
         </nav>
       </aside>
 

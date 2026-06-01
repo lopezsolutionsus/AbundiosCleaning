@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getUsers, deleteUser } from '../services/api';
+import { getUsers, deleteUser, getMe } from '../services/api';
 
 export default function UsersPage() {
   const [users, setUsers]             = useState([]);
@@ -7,7 +7,11 @@ export default function UsersPage() {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
-    getUsers().then(r => setUsers(r.data.filter(u => u.role === 'staff' || u.role === 'admin')));
+    Promise.all([getUsers(), getMe()]).then(([usersRes, meRes]) => {
+      setUsers(usersRes.data.filter(u =>
+        (u.role === 'staff' || u.role === 'admin') && u.id !== meRes.data.id
+      ));
+    });
   }, []);
 
   const filtered = users.filter(u => {

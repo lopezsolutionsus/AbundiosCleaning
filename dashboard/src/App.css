@@ -302,7 +302,7 @@
 }
 
 .btn-save:hover {
-  background: #c5607a;
+  background: var(--pink-hover);
 }
 
 /* Clients */

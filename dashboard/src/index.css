@@ -5,13 +5,14 @@
 }
 
 :root {
-  --pink:       #f2a7bb;
-  --pink-light: #fce4ec;
-  --pink-dark:  #e07a96;
-  --text:       #3a3a3a;
+  --pink:       #f47295;
+  --pink-light: #fde8ee;
+  --pink-dark:  #E90A46;
+  --pink-hover: #c20839;
+  --text:       #111827;
   --white:      #ffffff;
-  --gray:       #f5f5f5;
-  --border:     #f0d6de;
+  --gray:       #f9fafb;
+  --border:     #e5e7eb;
 }
 
 body {

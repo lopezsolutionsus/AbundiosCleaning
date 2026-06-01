@@ -21,7 +21,7 @@ export default function ClientsPage() {
   const [upcomingIds, setUpcomingIds]       = useState(new Set());
   const [filterCity, setFilterCity]         = useState('');
   const [filterCounty, setFilterCounty]     = useState('');
-  const [filterUpcoming, setFilterUpcoming] = useState(false);
+  const [filterUpcoming, setFilterUpcoming] = useState(true);
   const [filtersOpen, setFiltersOpen]       = useState(false);
   const [selected, setSelected]             = useState(null);
   const [editing, setEditing]           = useState(false);

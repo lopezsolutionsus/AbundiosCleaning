@@ -189,4 +189,4 @@ function Field({ label, children }) {
 
 const btnOutline  = { display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'none', border: '1.5px solid #e5e7eb', borderRadius: '0.5rem', padding: '0.35rem 0.8rem', fontSize: '0.82rem', color: '#555', cursor: 'pointer' };
 const btnCancel   = { background: 'none', border: '1.5px solid #e5e7eb', borderRadius: '0.5rem', padding: '0.35rem 0.8rem', fontSize: '0.82rem', color: '#555', cursor: 'pointer' };
-const btnPrimary  = { background: '#E90A46', color: 'white', border: 'none', borderRadius: '0.5rem', padding: '0.4rem 1.1rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' };
+const btnPrimary  = { background: '#4aba6e', color: 'white', border: 'none', borderRadius: '0.5rem', padding: '0.4rem 1.1rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' };

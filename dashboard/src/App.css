@@ -459,3 +459,107 @@
   padding: 2rem;
   font-size: 0.95rem;
 }
+
+/* Add Appointment Page */
+.appt-page {
+  height: 100%;
+}
+
+.appt-page-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 1.25rem;
+}
+
+.appt-form-card {
+  background: var(--white);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.appt-field {
+  margin-bottom: 1.1rem;
+}
+
+.appt-field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.35rem;
+}
+
+.appt-field input,
+.appt-field select,
+.appt-field textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 0.65rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  background: white;
+}
+
+.appt-field input:focus,
+.appt-field select:focus,
+.appt-field textarea:focus {
+  border-color: var(--pink-dark);
+}
+
+.appt-field textarea {
+  resize: vertical;
+}
+
+.appt-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.appt-optional {
+  font-weight: 400;
+  color: #aaa;
+  font-size: 0.78rem;
+  margin-left: 0.3rem;
+}
+
+.appt-msg {
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.appt-msg-ok  { background: #edfaf1; color: #27ae60; }
+.appt-msg-err { background: #fdf0f0; color: #c0392b; }
+
+.appt-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.appt-btn-submit {
+  background: var(--pink-dark);
+  color: white;
+  border: none;
+  border-radius: 0.6rem;
+  padding: 0.7rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.appt-btn-submit:hover    { background: var(--pink-hover); }
+.appt-btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 600px) {
+  .appt-row-2 { grid-template-columns: 1fr; }
+  .appt-form-card { padding: 1.25rem; }
+}

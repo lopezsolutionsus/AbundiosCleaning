@@ -30,12 +30,12 @@ app.include_router(client_router.router)
 @app.on_event("startup")
 def seed_defaults():
     db = Session(engine)
-    if not db.query(models.User).filter(models.User.email == "lili@abundioscleaning.com").first():
+    if not db.query(models.User).filter(models.User.email == "lily@abundioscleaning.com").first():
         db.add(models.User(
-            email="lili@abundioscleaning.com",
-            username="lili",
-            hashed_password=hash_password("lili1234"),
-            first_name="Lili",
+            email="lily@abundioscleaning.com",
+            username="lily",
+            hashed_password=hash_password("lily1234"),
+            first_name="Lily",
             last_name="Abundio-Alonso",
             role="admin",
             email_verified=True,

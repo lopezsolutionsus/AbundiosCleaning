@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import CalendarPage from './pages/CalendarPage';
+import AddAppointmentPage from './pages/AddAppointmentPage';
 import ClientsPage from './pages/ClientsPage';
 import UsersPage from './pages/UsersPage';
 import ProfilePage from './pages/ProfilePage';
@@ -26,6 +27,7 @@ function App() {
         }>
           <Route index element={<Navigate to="/calendar" replace />} />
           <Route path="calendar" element={<CalendarPage />} />
+          <Route path="add-appointment" element={<AddAppointmentPage />} />
           <Route path="clients" element={<ClientsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="profile" element={<ProfilePage />} />

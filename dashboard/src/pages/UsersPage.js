@@ -6,7 +6,9 @@ export default function UsersPage() {
   const [search, setSearch]           = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
 
-  useEffect(() => { getUsers().then(r => setUsers(r.data)); }, []);
+  useEffect(() => {
+    getUsers().then(r => setUsers(r.data.filter(u => u.role === 'staff' || u.role === 'admin')));
+  }, []);
 
   const filtered = users.filter(u => {
     const q = search.toLowerCase();
@@ -26,7 +28,7 @@ export default function UsersPage() {
   return (
     <div className="clients-wrap">
       <div className="clients-header">
-        <h2>Users ({users.length})</h2>
+        <h2>Staff ({users.length})</h2>
         <input
           className="search-input"
           placeholder="Search..."
@@ -76,7 +78,7 @@ export default function UsersPage() {
       {deleteTarget && (
         <div className="modal-overlay" onClick={() => setDeleteTarget(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <h3>Delete User</h3>
+            <h3>Delete Staff Member</h3>
             <p>Are you sure you want to delete <strong>{deleteTarget.first_name} {deleteTarget.last_name}</strong> ({deleteTarget.email})?</p>
             <p style={{ fontSize: '0.85rem', color: '#c0392b' }}>This will permanently delete their account and all associated data.</p>
             <div className="modal-actions">

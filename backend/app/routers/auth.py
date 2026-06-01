@@ -370,6 +370,42 @@ def delete_user(user_id: str, current_user=Depends(auth.get_current_user), db: S
     return {"ok": True}
 
 
+class AdminUpdateUserForm(BaseModel):
+    first_name: str
+    last_name: Optional[str] = ""
+    phone: Optional[str] = ""
+    email: str
+
+
+@router.put("/users/{user_id}")
+def admin_update_user(user_id: str, form: AdminUpdateUserForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admins only")
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if form.email != user.email:
+        existing = db.query(models.User).filter(models.User.email == form.email).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already in use")
+    user.first_name = form.first_name
+    user.last_name  = form.last_name
+    user.phone      = form.phone
+    user.email      = form.email
+    db.commit()
+    db.refresh(user)
+    return {
+        "id": user.id,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "phone": user.phone,
+        "role": user.role,
+        "email_verified": user.email_verified,
+        "created_at": user.created_at.isoformat() if user.created_at else None,
+    }
+
+
 @router.get("/me")
 def me(current_user=Depends(auth.get_current_user)):
     return {

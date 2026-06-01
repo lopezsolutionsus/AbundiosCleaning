@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getUsers, deleteUser } from '../services/api';
+import { getUsers, deleteUser, adminUpdateUser } from '../services/api';
 
 const PencilIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -8,10 +8,16 @@ const PencilIcon = () => (
   </svg>
 );
 
+const EMPTY_FORM = { first_name: '', last_name: '', email: '', phone: '' };
+
 export default function ClientsPage() {
   const [clients, setClients]           = useState([]);
   const [search, setSearch]             = useState('');
   const [selected, setSelected]         = useState(null);
+  const [editing, setEditing]           = useState(false);
+  const [form, setForm]                 = useState(EMPTY_FORM);
+  const [saving, setSaving]             = useState(false);
+  const [saveMsg, setSaveMsg]           = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
@@ -28,11 +34,40 @@ export default function ClientsPage() {
     );
   });
 
+  function openDetail(c) {
+    setSelected(c);
+    setEditing(false);
+    setSaveMsg(null);
+    setForm({ first_name: c.first_name, last_name: c.last_name || '', email: c.email, phone: c.phone || '' });
+  }
+
+  function closeModal() {
+    setSelected(null);
+    setEditing(false);
+    setSaveMsg(null);
+    setDeleteTarget(null);
+  }
+
+  async function handleSave(e) {
+    e.preventDefault();
+    setSaving(true); setSaveMsg(null);
+    try {
+      const res = await adminUpdateUser(selected.id, form);
+      const updated = res.data;
+      setClients(prev => prev.map(c => c.id === updated.id ? updated : c));
+      setSelected(updated);
+      setEditing(false);
+      setSaveMsg({ ok: true, text: 'Changes saved.' });
+    } catch (err) {
+      setSaveMsg({ ok: false, text: err.response?.data?.detail || 'Failed to save.' });
+    }
+    setSaving(false);
+  }
+
   async function confirmDelete() {
     await deleteUser(deleteTarget.id);
     setClients(prev => prev.filter(c => c.id !== deleteTarget.id));
-    setDeleteTarget(null);
-    setSelected(null);
+    closeModal();
   }
 
   return (
@@ -66,7 +101,7 @@ export default function ClientsPage() {
               <td>{c.email}</td>
               <td>{c.phone || '—'}</td>
               <td>
-                <button className="btn-icon" onClick={() => setSelected(c)} title="View details">
+                <button className="btn-icon" onClick={() => openDetail(c)} title="View / edit">
                   <PencilIcon />
                 </button>
               </td>
@@ -75,26 +110,47 @@ export default function ClientsPage() {
         </tbody>
       </table>
 
-      {/* Detail modal */}
+      {/* Detail / edit modal */}
       {selected && !deleteTarget && (
-        <div className="modal-overlay" onClick={() => setSelected(null)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <h3>{selected.first_name} {selected.last_name}</h3>
-            <div style={detailGrid}>
-              <DetailRow label="Email"      value={selected.email} />
-              <DetailRow label="Phone"      value={selected.phone || '—'} />
-              <DetailRow label="Verified"   value={selected.email_verified ? 'Yes' : 'Pending'} />
-              <DetailRow label="Registered" value={selected.created_at ? new Date(selected.created_at).toLocaleDateString() : '—'} />
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal" style={{ minWidth: 340 }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h3 style={{ margin: 0 }}>{selected.first_name} {selected.last_name}</h3>
+              {!editing
+                ? <button style={btnOutline} onClick={() => { setEditing(true); setSaveMsg(null); }}><PencilIcon /> Edit</button>
+                : <button style={btnCancel} onClick={() => { setEditing(false); setSaveMsg(null); setForm({ first_name: selected.first_name, last_name: selected.last_name || '', email: selected.email, phone: selected.phone || '' }); }}>Cancel</button>}
             </div>
-            <div className="modal-actions" style={{ marginTop: '1.5rem' }}>
-              <button className="btn-cancel" onClick={() => setSelected(null)}>Close</button>
-              <button className="btn-danger" onClick={() => setDeleteTarget(selected)}>Delete</button>
-            </div>
+
+            {saveMsg && <p style={{ fontSize: '0.85rem', color: saveMsg.ok ? '#27ae60' : '#c0392b', margin: '0 0 0.75rem' }}>{saveMsg.text}</p>}
+
+            {editing ? (
+              <form onSubmit={handleSave}>
+                <Field label="First name"><input value={form.first_name} onChange={e => setForm({ ...form, first_name: e.target.value })} required /></Field>
+                <Field label="Last name"><input value={form.last_name} onChange={e => setForm({ ...form, last_name: e.target.value })} /></Field>
+                <Field label="Email"><input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required /></Field>
+                <Field label="Phone"><input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} /></Field>
+                <div className="modal-actions" style={{ marginTop: '1.25rem' }}>
+                  <button type="button" className="btn-danger" onClick={() => setDeleteTarget(selected)}>Delete</button>
+                  <button type="submit" style={btnPrimary} disabled={saving}>{saving ? 'Saving…' : 'Save changes'}</button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <DetailRow label="Email"      value={selected.email} />
+                <DetailRow label="Phone"      value={selected.phone || '—'} />
+                <DetailRow label="Verified"   value={selected.email_verified ? 'Yes' : 'Pending'} />
+                <DetailRow label="Registered" value={selected.created_at ? new Date(selected.created_at).toLocaleDateString() : '—'} />
+                <div className="modal-actions" style={{ marginTop: '1.5rem' }}>
+                  <button className="btn-cancel" onClick={closeModal}>Close</button>
+                  <button className="btn-danger" onClick={() => setDeleteTarget(selected)}>Delete</button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
 
-      {/* Delete confirmation modal */}
+      {/* Delete confirmation */}
       {deleteTarget && (
         <div className="modal-overlay" onClick={() => setDeleteTarget(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
@@ -121,4 +177,10 @@ function DetailRow({ label, value }) {
   );
 }
 
-const detailGrid = { marginTop: '0.75rem' };
+function Field({ label, children }) {
+  return <div className="form-field"><label>{label}</label>{children}</div>;
+}
+
+const btnOutline  = { display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'none', border: '1.5px solid #e5e7eb', borderRadius: '0.5rem', padding: '0.35rem 0.8rem', fontSize: '0.82rem', color: '#555', cursor: 'pointer' };
+const btnCancel   = { background: 'none', border: '1.5px solid #e5e7eb', borderRadius: '0.5rem', padding: '0.35rem 0.8rem', fontSize: '0.82rem', color: '#555', cursor: 'pointer' };
+const btnPrimary  = { background: '#E90A46', color: 'white', border: 'none', borderRadius: '0.5rem', padding: '0.4rem 1.1rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' };

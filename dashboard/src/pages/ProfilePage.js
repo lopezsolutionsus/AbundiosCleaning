@@ -3,10 +3,18 @@ import { getMe, updateMe, changePassword } from '../services/api';
 
 const ROLE_LABEL = { admin: 'Administrator', staff: 'Staff', client: 'Client' };
 
+const EditIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+  </svg>
+);
+
 export default function ProfilePage() {
-  const [user, setUser]           = useState(null);
-  const [profileForm, setProfile] = useState({ first_name: '', last_name: '', email: '', phone: '' });
-  const [pwForm, setPw]           = useState({ current_password: '', new_password: '', confirm: '' });
+  const [user, setUser]             = useState(null);
+  const [editing, setEditing]       = useState(false);
+  const [pwOpen, setPwOpen]         = useState(false);
+  const [form, setForm]             = useState({ first_name: '', last_name: '', email: '', phone: '' });
+  const [pwForm, setPwForm]         = useState({ current_password: '', new_password: '', confirm: '' });
   const [profileMsg, setProfileMsg] = useState(null);
   const [pwMsg, setPwMsg]           = useState(null);
   const [saving, setSaving]         = useState(false);
@@ -17,7 +25,7 @@ export default function ProfilePage() {
     getMe()
       .then(r => {
         setUser(r.data);
-        setProfile({
+        setForm({
           first_name: r.data.first_name || '',
           last_name:  r.data.last_name  || '',
           email:      r.data.email      || '',
@@ -27,15 +35,23 @@ export default function ProfilePage() {
       .catch(() => setLoadError(true));
   }, []);
 
-  async function handleProfileSave(e) {
-    e.preventDefault();
+  function startEdit() { setEditing(true); setProfileMsg(null); }
+  function cancelEdit() {
+    setEditing(false);
+    setForm({ first_name: user.first_name, last_name: user.last_name, email: user.email, phone: user.phone || '' });
     setProfileMsg(null);
+  }
+
+  async function handleSave(e) {
+    e.preventDefault();
     setSaving(true);
+    setProfileMsg(null);
     try {
-      const res = await updateMe(profileForm);
+      const res = await updateMe(form);
       setUser(prev => ({ ...prev, ...res.data }));
       localStorage.setItem('first_name', res.data.first_name);
-      setProfileMsg({ ok: true, text: 'Profile updated.' });
+      setEditing(false);
+      setProfileMsg({ ok: true, text: 'Profile updated successfully.' });
     } catch (err) {
       setProfileMsg({ ok: false, text: err.response?.data?.detail || 'Failed to update profile.' });
     }
@@ -45,100 +61,117 @@ export default function ProfilePage() {
   async function handlePasswordSave(e) {
     e.preventDefault();
     setPwMsg(null);
-    if (pwForm.new_password !== pwForm.confirm) {
-      setPwMsg({ ok: false, text: 'New passwords do not match.' });
-      return;
-    }
-    if (pwForm.new_password.length < 6) {
-      setPwMsg({ ok: false, text: 'New password must be at least 6 characters.' });
-      return;
-    }
+    if (pwForm.new_password !== pwForm.confirm) { setPwMsg({ ok: false, text: 'Passwords do not match.' }); return; }
+    if (pwForm.new_password.length < 6)         { setPwMsg({ ok: false, text: 'Password must be at least 6 characters.' }); return; }
     setSavingPw(true);
     try {
       await changePassword({ current_password: pwForm.current_password, new_password: pwForm.new_password });
-      setPwMsg({ ok: true, text: 'Password changed successfully.' });
-      setPw({ current_password: '', new_password: '', confirm: '' });
+      setPwMsg({ ok: true, text: 'Password updated successfully.' });
+      setPwForm({ current_password: '', new_password: '', confirm: '' });
+      setPwOpen(false);
     } catch (err) {
       setPwMsg({ ok: false, text: err.response?.data?.detail || 'Failed to change password.' });
     }
     setSavingPw(false);
   }
 
-  if (loadError) return <div style={{ padding: '2rem', color: '#c0392b' }}>Could not load profile. Try refreshing the page.</div>;
-  if (!user)     return <div style={{ padding: '2rem', color: '#888' }}>Loading...</div>;
+  if (loadError) return <p style={{ padding: '2rem', color: '#c0392b' }}>Could not load profile. Try refreshing.</p>;
+  if (!user)     return <p style={{ padding: '2rem', color: '#aaa' }}>Loading...</p>;
 
   return (
-    <div style={{ maxWidth: 560, padding: '2rem' }}>
-      <h2 style={{ marginBottom: '0.25rem' }}>My Profile</h2>
-      <p style={{ color: '#888', fontSize: '0.85rem', marginBottom: '2rem' }}>
-        Logged in as <strong>{user.email}</strong> &mdash;{' '}
-        <span style={{ background: '#fde8ee', color: '#E90A46', padding: '2px 8px', borderRadius: 999, fontSize: '0.78rem', fontWeight: 600 }}>
-          {ROLE_LABEL[user.role] || user.role}
-        </span>
-      </p>
+    <div style={{ maxWidth: 600 }}>
 
-      {/* Profile info */}
-      <section style={cardStyle}>
-        <h3 style={sectionTitle}>Personal Info</h3>
-        <form onSubmit={handleProfileSave}>
-          <div style={rowStyle}>
-            <div className="form-field" style={{ flex: 1 }}>
-              <label>First Name</label>
-              <input value={profileForm.first_name} onChange={e => setProfile({ ...profileForm, first_name: e.target.value })} required />
-            </div>
-            <div className="form-field" style={{ flex: 1 }}>
-              <label>Last Name</label>
-              <input value={profileForm.last_name} onChange={e => setProfile({ ...profileForm, last_name: e.target.value })} />
-            </div>
-          </div>
-          <div className="form-field">
-            <label>Email</label>
-            <input type="email" value={profileForm.email} onChange={e => setProfile({ ...profileForm, email: e.target.value })} required />
-          </div>
-          <div className="form-field">
-            <label>Phone</label>
-            <input type="tel" value={profileForm.phone} onChange={e => setProfile({ ...profileForm, phone: e.target.value })} placeholder="(434) 000-0000" />
-          </div>
-          {profileMsg && <p style={{ ...msgStyle, color: profileMsg.ok ? '#27ae60' : '#c0392b' }}>{profileMsg.text}</p>}
-          <button type="submit" className="btn-save" style={{ marginTop: '0.5rem', padding: '0.5rem 1.4rem' }} disabled={saving}>
-            {saving ? 'Saving...' : 'Save Changes'}
-          </button>
-        </form>
-      </section>
+      {/* Profile card */}
+      <div style={card}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111', margin: 0 }}>Profile</h2>
+          {!editing
+            ? <button onClick={startEdit} style={btnOutline}><EditIcon /> Edit</button>
+            : <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button onClick={cancelEdit} style={btnCancel}>Cancel</button>
+                <button form="profileForm" type="submit" style={btnPrimary} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+              </div>
+          }
+        </div>
 
-      {/* Change password */}
-      <section style={cardStyle}>
-        <h3 style={sectionTitle}>Change Password</h3>
-        <form onSubmit={handlePasswordSave}>
-          <div className="form-field">
-            <label>Current Password</label>
-            <input type="password" value={pwForm.current_password} onChange={e => setPw({ ...pwForm, current_password: e.target.value })} required />
+        {profileMsg && <p style={{ fontSize: '0.85rem', color: profileMsg.ok ? '#27ae60' : '#c0392b', marginBottom: '1rem' }}>{profileMsg.text}</p>}
+
+        {editing ? (
+          <form id="profileForm" onSubmit={handleSave}>
+            <Field label="First name"><input value={form.first_name} onChange={e => setForm({ ...form, first_name: e.target.value })} required /></Field>
+            <Field label="Last name"><input value={form.last_name}  onChange={e => setForm({ ...form, last_name: e.target.value })} /></Field>
+            <Field label="Email"><input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} required /></Field>
+            <Field label="Phone"><input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="(434) 000-0000" /></Field>
+          </form>
+        ) : (
+          <div>
+            <Row label="First name"  value={user.first_name} />
+            <Row label="Last name"   value={user.last_name  || '—'} />
+            <Row label="Email"       value={user.email} />
+            <Row label="Phone"       value={user.phone || '—'} />
+            <Row label="Role"        value={ROLE_LABEL[user.role] || user.role} />
+            <Row label="Email verified" value={user.email_verified ? 'Yes' : 'No'} />
           </div>
-          <div className="form-field">
-            <label>New Password</label>
-            <input type="password" value={pwForm.new_password} onChange={e => setPw({ ...pwForm, new_password: e.target.value })} placeholder="At least 6 characters" required />
-          </div>
-          <div className="form-field">
-            <label>Confirm New Password</label>
-            <input type="password" value={pwForm.confirm} onChange={e => setPw({ ...pwForm, confirm: e.target.value })} required />
-          </div>
-          {pwMsg && <p style={{ ...msgStyle, color: pwMsg.ok ? '#27ae60' : '#c0392b' }}>{pwMsg.text}</p>}
-          <button type="submit" className="btn-save" style={{ marginTop: '0.5rem', padding: '0.5rem 1.4rem' }} disabled={savingPw}>
-            {savingPw ? 'Saving...' : 'Update Password'}
-          </button>
-        </form>
-      </section>
+        )}
+      </div>
+
+      {/* Change password card */}
+      <div style={card}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111', margin: 0 }}>Change Password</h2>
+          {!pwOpen
+            ? <button onClick={() => { setPwOpen(true); setPwMsg(null); }} style={btnOutline}><EditIcon /> Change</button>
+            : <button onClick={() => { setPwOpen(false); setPwMsg(null); setPwForm({ current_password: '', new_password: '', confirm: '' }); }} style={btnCancel}>Cancel</button>
+          }
+        </div>
+
+        {pwOpen && (
+          <form onSubmit={handlePasswordSave} style={{ marginTop: '1.5rem' }}>
+            <Field label="Current password"><input type="password" value={pwForm.current_password} onChange={e => setPwForm({ ...pwForm, current_password: e.target.value })} required /></Field>
+            <Field label="New password"><input type="password" value={pwForm.new_password} onChange={e => setPwForm({ ...pwForm, new_password: e.target.value })} placeholder="At least 6 characters" required /></Field>
+            <Field label="Confirm new password"><input type="password" value={pwForm.confirm} onChange={e => setPwForm({ ...pwForm, confirm: e.target.value })} required /></Field>
+            {pwMsg && <p style={{ fontSize: '0.85rem', color: pwMsg.ok ? '#27ae60' : '#c0392b', margin: '0.5rem 0' }}>{pwMsg.text}</p>}
+            <button type="submit" style={{ ...btnPrimary, marginTop: '0.25rem' }} disabled={savingPw}>{savingPw ? 'Saving…' : 'Update Password'}</button>
+          </form>
+        )}
+      </div>
+
     </div>
   );
 }
 
-const cardStyle = {
-  background: 'white',
-  borderRadius: '0.75rem',
-  padding: '1.5rem',
-  marginBottom: '1.25rem',
-  boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+function Row({ label, value }) {
+  return (
+    <div style={{ display: 'flex', padding: '0.65rem 0', borderBottom: '1px solid #f3f4f6' }}>
+      <span style={{ width: 160, fontSize: '0.85rem', color: '#888', flexShrink: 0 }}>{label}</span>
+      <span style={{ fontSize: '0.9rem', color: '#111', fontWeight: 500 }}>{value}</span>
+    </div>
+  );
+}
+
+function Field({ label, children }) {
+  return (
+    <div className="form-field">
+      <label>{label}</label>
+      {children}
+    </div>
+  );
+}
+
+const card = {
+  background: 'white', borderRadius: '0.75rem', padding: '1.5rem',
+  marginBottom: '1.25rem', boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
 };
-const sectionTitle = { fontSize: '1rem', fontWeight: 700, marginBottom: '1rem', color: '#111' };
-const rowStyle     = { display: 'flex', gap: '0.75rem' };
-const msgStyle     = { fontSize: '0.85rem', marginTop: '0.5rem' };
+const btnOutline = {
+  display: 'flex', alignItems: 'center', gap: '0.35rem',
+  background: 'none', border: '1.5px solid #e5e7eb', borderRadius: '0.5rem',
+  padding: '0.4rem 0.9rem', fontSize: '0.85rem', color: '#555', cursor: 'pointer',
+};
+const btnCancel = {
+  background: 'none', border: '1.5px solid #e5e7eb', borderRadius: '0.5rem',
+  padding: '0.4rem 0.9rem', fontSize: '0.85rem', color: '#555', cursor: 'pointer',
+};
+const btnPrimary = {
+  background: '#E90A46', color: 'white', border: 'none', borderRadius: '0.5rem',
+  padding: '0.4rem 1.1rem', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
+};

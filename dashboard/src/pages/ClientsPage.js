@@ -17,12 +17,13 @@ const PencilIcon = () => (
 const EMPTY_FORM = { first_name: '', last_name: '', email: '', phone: '', zip_code: '', city: '', county: '' };
 
 export default function ClientsPage() {
-  const [clients, setClients]             = useState([]);
-  const [upcomingIds, setUpcomingIds]     = useState(new Set());
-  const [filterCity, setFilterCity]       = useState('');
-  const [filterCounty, setFilterCounty]   = useState('');
+  const [clients, setClients]               = useState([]);
+  const [upcomingIds, setUpcomingIds]       = useState(new Set());
+  const [filterCity, setFilterCity]         = useState('');
+  const [filterCounty, setFilterCounty]     = useState('');
   const [filterUpcoming, setFilterUpcoming] = useState(false);
-  const [selected, setSelected]           = useState(null);
+  const [filtersOpen, setFiltersOpen]       = useState(false);
+  const [selected, setSelected]             = useState(null);
   const [editing, setEditing]           = useState(false);
   const [form, setForm]                 = useState(EMPTY_FORM);
   const [saving, setSaving]             = useState(false);
@@ -111,25 +112,64 @@ export default function ClientsPage() {
       {/* Header + filters */}
       <div className="clients-header">
         <h2>Clients ({filtered.length}{filtered.length !== clients.length ? ` of ${clients.length}` : ''})</h2>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <select className="filter-select" value={filterCity} onChange={e => setFilterCity(e.target.value)}>
-            <option value="">All cities</option>
-            {cities.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-          <select className="filter-select" value={filterCounty} onChange={e => setFilterCounty(e.target.value)}>
-            <option value="">All counties</option>
-            {counties.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-          <label className="toggle-label">
-            <div className={`toggle-switch ${filterUpcoming ? 'on' : ''}`} onClick={() => setFilterUpcoming(v => !v)}>
-              <div className="toggle-thumb" />
-            </div>
-            <span>Upcoming appt.</span>
-          </label>
-          {(filterCity || filterCounty || filterUpcoming) && (
-            <button className="filter-clear" onClick={() => { setFilterCity(''); setFilterCounty(''); setFilterUpcoming(false); }}>
-              Clear
-            </button>
+        <div style={{ position: 'relative' }}>
+          <button
+            className={`filter-btn${(filterCity || filterCounty || filterUpcoming) ? ' filter-btn-active' : ''}`}
+            onClick={() => setFiltersOpen(v => !v)}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+            </svg>
+            Filters
+            {(filterCity || filterCounty || filterUpcoming) && (
+              <span className="filter-badge">
+                {[filterCity, filterCounty, filterUpcoming].filter(Boolean).length}
+              </span>
+            )}
+          </button>
+
+          {filtersOpen && (
+            <>
+              <div className="filter-backdrop" onClick={() => setFiltersOpen(false)} />
+              <div className="filter-dropdown">
+                <div className="filter-dropdown-title">Filters</div>
+
+                <div className="filter-group">
+                  <label>City</label>
+                  <select className="filter-select" value={filterCity} onChange={e => setFilterCity(e.target.value)}>
+                    <option value="">All cities</option>
+                    {cities.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                <div className="filter-group">
+                  <label>County</label>
+                  <select className="filter-select" value={filterCounty} onChange={e => setFilterCounty(e.target.value)}>
+                    <option value="">All counties</option>
+                    {counties.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                <div className="filter-group">
+                  <label className="toggle-label" style={{ marginBottom: 0 }}>
+                    <div className={`toggle-switch ${filterUpcoming ? 'on' : ''}`} onClick={() => setFilterUpcoming(v => !v)}>
+                      <div className="toggle-thumb" />
+                    </div>
+                    <span>Has upcoming appointment</span>
+                  </label>
+                </div>
+
+                {(filterCity || filterCounty || filterUpcoming) && (
+                  <button
+                    className="filter-clear"
+                    style={{ marginTop: '0.75rem', width: '100%', textAlign: 'center' }}
+                    onClick={() => { setFilterCity(''); setFilterCounty(''); setFilterUpcoming(false); }}
+                  >
+                    Clear all
+                  </button>
+                )}
+              </div>
+            </>
           )}
         </div>
       </div>

@@ -460,6 +460,75 @@
   font-size: 0.95rem;
 }
 
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 0.6rem;
+  background: white;
+  font-size: 0.85rem;
+  color: #555;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.filter-btn:hover      { border-color: var(--pink-dark); color: var(--pink-dark); }
+.filter-btn-active     { border-color: var(--pink-dark); color: var(--pink-dark); background: var(--pink-light); }
+
+.filter-badge {
+  background: var(--pink-dark);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  line-height: 1.4;
+}
+
+.filter-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.25rem;
+  min-width: 240px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.filter-dropdown-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.85rem;
+}
+
+.filter-group {
+  margin-bottom: 0.85rem;
+}
+
+.filter-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.3rem;
+}
+
+.filter-group .filter-select { width: 100%; }
+
 .filter-select {
   padding: 0.45rem 0.75rem;
   border: 1.5px solid var(--border);

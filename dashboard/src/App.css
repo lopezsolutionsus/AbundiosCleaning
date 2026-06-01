@@ -112,9 +112,7 @@
 
 /* Calendar */
 .calendar-wrap {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 1.5rem;
+  display: block;
 }
 
 .calendar-box, .agenda-box {

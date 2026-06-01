@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getUsers, getAppointments, deleteAppointment } from '../services/api';
+import { getAppointments, deleteAppointment } from '../services/api';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const TYPES  = { general: 'General Cleaning', profunda: 'Deep Cleaning' };
+const TYPES  = { general: 'General Cleaning', profunda: 'Deep Cleaning', move: 'Move-In / Move-Out', post_construction: 'Post-Construction' };
 
 function dateKey(y, m, d) {
   return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -11,11 +11,11 @@ function dateKey(y, m, d) {
 
 export default function CalendarPage() {
   const today = new Date();
-  const [year, setYear]         = useState(today.getFullYear());
-  const [month, setMonth]       = useState(today.getMonth());
-  const [selected, setSelected] = useState(null);
+  const [year, setYear]   = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth());
   const [appointments, setAppointments] = useState([]);
-  const [showModal, setShowModal] = useState(null);
+  const [dayModal, setDayModal]         = useState(null); // { key, appts }
+  const [detailModal, setDetailModal]   = useState(null); // single appt
 
   useEffect(() => {
     getAppointments().then(r => setAppointments(r.data));
@@ -37,20 +37,25 @@ export default function CalendarPage() {
     return appointments.filter(a => a.date === key);
   }
 
+  function handleDayClick(key) {
+    const appts = apptsByDate(key);
+    if (appts.length > 0) setDayModal({ key, appts });
+  }
+
   async function handleDelete(id) {
     await deleteAppointment(id);
     setAppointments(prev => prev.filter(a => a.id !== id));
-    setShowModal(null);
+    setDetailModal(null);
+    setDayModal(prev => prev ? { ...prev, appts: prev.appts.filter(a => a.id !== id) } : null);
   }
 
-  const dayAppts = selected ? apptsByDate(selected) : [];
-  const selectedLabel = selected
-    ? `${MONTHS[parseInt(selected.split('-')[1])-1]} ${parseInt(selected.split('-')[2])}, ${selected.split('-')[0]}`
-    : 'Select a day';
+  const dayLabel = key => {
+    const [y, m, d] = key.split('-');
+    return `${MONTHS[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+  };
 
   return (
     <div className="calendar-wrap">
-      {/* Calendar grid */}
       <div className="calendar-box">
         <div className="calendar-header">
           <button onClick={prevMonth}>‹</button>
@@ -68,8 +73,8 @@ export default function CalendarPage() {
             return (
               <div
                 key={key}
-                className={`calendar-day${isToday ? ' today' : ''}${selected===key ? ' selected' : ''}`}
-                onClick={() => setSelected(key)}
+                className={`calendar-day${isToday ? ' today' : ''}`}
+                onClick={() => handleDayClick(key)}
               >
                 <span className="day-num">{d}</span>
                 {appts.length > 0 && (
@@ -83,33 +88,42 @@ export default function CalendarPage() {
         </div>
       </div>
 
-      {/* Day agenda */}
-      <div className="agenda-box">
-        {selected && <h3>{selectedLabel}</h3>}
-        {selected && dayAppts.length === 0 && <p className="empty-msg" style={{ marginTop: '1rem' }}>No appointments this day.</p>}
-        {dayAppts.map(a => (
-          <div key={a.id} className="appt-card" onClick={() => setShowModal(a)}>
-            <div className="appt-client">{a.client}</div>
-            {a.property && <div className="appt-meta">{a.property}</div>}
-            <div className="appt-meta">{a.time || '—'}</div>
-            <span className="appt-badge">{TYPES[a.type] || a.type}</span>
+      {/* Day appointments modal */}
+      {dayModal && !detailModal && (
+        <div className="modal-overlay" onClick={() => setDayModal(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h3>{dayLabel(dayModal.key)}</h3>
+            {dayModal.appts.length === 0
+              ? <p style={{ color: '#aaa', fontSize: '0.9rem' }}>No appointments.</p>
+              : dayModal.appts.map(a => (
+                  <div key={a.id} className="appt-card" onClick={() => setDetailModal(a)}>
+                    <div className="appt-client">{a.client}</div>
+                    {a.property && <div className="appt-meta">{a.property}</div>}
+                    <div className="appt-meta">{a.time || '—'}</div>
+                    <span className="appt-badge">{TYPES[a.type] || a.type}</span>
+                  </div>
+                ))
+            }
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setDayModal(null)}>Close</button>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
       {/* Appointment detail modal */}
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(null)}>
+      {detailModal && (
+        <div className="modal-overlay" onClick={() => setDetailModal(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <h3>{showModal.client}</h3>
-            <p><strong>Date:</strong> {showModal.date}</p>
-            <p><strong>Time:</strong> {showModal.time || '—'}</p>
-            <p><strong>Type:</strong> {TYPES[showModal.type] || showModal.type}</p>
-            {showModal.property && <p><strong>Property:</strong> {showModal.property}</p>}
-            {showModal.notes    && <p><strong>Notes:</strong>    {showModal.notes}</p>}
+            <h3>{detailModal.client}</h3>
+            <p><strong>Date:</strong> {detailModal.date}</p>
+            <p><strong>Time:</strong> {detailModal.time || '—'}</p>
+            <p><strong>Type:</strong> {TYPES[detailModal.type] || detailModal.type}</p>
+            {detailModal.property && <p><strong>Property:</strong> {detailModal.property}</p>}
+            {detailModal.notes    && <p><strong>Notes:</strong>    {detailModal.notes}</p>}
             <div className="modal-actions">
-              <button className="btn-cancel" onClick={() => setShowModal(null)}>Close</button>
-              <button className="btn-danger" onClick={() => handleDelete(showModal.id)}>Delete</button>
+              <button className="btn-cancel" onClick={() => setDetailModal(null)}>Back</button>
+              <button className="btn-danger" onClick={() => handleDelete(detailModal.id)}>Delete</button>
             </div>
           </div>
         </div>

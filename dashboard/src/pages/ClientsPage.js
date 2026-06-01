@@ -147,8 +147,8 @@ export default function ClientsPage() {
                 <DetailRow label="Verified"   value={selected.email_verified ? 'Yes' : 'Pending'} />
                 <DetailRow label="Registered" value={selected.created_at ? new Date(selected.created_at).toLocaleDateString() : '—'} />
                 <div className="modal-actions" style={{ marginTop: '1.5rem' }}>
-                  <button className="btn-cancel" onClick={closeModal}>Close</button>
                   <button className="btn-danger" onClick={() => setDeleteTarget(selected)}>Delete</button>
+                  <button className="btn-cancel" onClick={closeModal}>Cancel</button>
                 </div>
               </>
             )}

@@ -36,10 +36,9 @@ export default function AddAppointmentPage() {
   }
 
   return (
-    <div className="appt-page">
-      <h2 className="appt-page-title">Add Appointment</h2>
-
+    <div style={{ maxWidth: 600 }}>
       <form className="appt-form-card" onSubmit={handleSubmit}>
+        <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111', marginBottom: '1.5rem' }}>Add Appointment</h2>
         {msg && (
           <div className={`appt-msg ${msg.ok ? 'appt-msg-ok' : 'appt-msg-err'}`}>
             {msg.text}
@@ -57,19 +56,16 @@ export default function AddAppointmentPage() {
           </select>
         </div>
 
-        {/* Row 2: Date + Time */}
-        <div className="appt-row-2">
-          <div className="appt-field">
-            <label>Date</label>
-            <input type="date" value={form.date} onChange={e => set('date', e.target.value)} required />
-          </div>
-          <div className="appt-field">
-            <label>Time</label>
-            <input type="time" value={form.time} onChange={e => set('time', e.target.value)} />
-          </div>
+        <div className="appt-field">
+          <label>Date</label>
+          <input type="date" value={form.date} onChange={e => set('date', e.target.value)} required />
         </div>
 
-        {/* Row 3: Service type full width */}
+        <div className="appt-field">
+          <label>Time</label>
+          <input type="time" value={form.time} onChange={e => set('time', e.target.value)} />
+        </div>
+
         <div className="appt-field">
           <label>Service type</label>
           <select value={form.type} onChange={e => set('type', e.target.value)}>
@@ -79,13 +75,11 @@ export default function AddAppointmentPage() {
           </select>
         </div>
 
-        {/* Row 4: Property full width */}
         <div className="appt-field">
           <label>Property address <span className="appt-optional">optional</span></label>
           <input value={form.property} onChange={e => set('property', e.target.value)} placeholder="e.g. 123 Main St" />
         </div>
 
-        {/* Row 5: Notes full width */}
         <div className="appt-field">
           <label>Notes <span className="appt-optional">optional</span></label>
           <textarea value={form.notes} onChange={e => set('notes', e.target.value)} placeholder="Any special instructions..." rows={4} />

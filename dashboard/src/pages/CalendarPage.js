@@ -85,8 +85,7 @@ export default function CalendarPage() {
 
       {/* Day agenda */}
       <div className="agenda-box">
-        <h3>{selectedLabel}</h3>
-        {!selected && <p className="empty-msg" style={{ marginTop: '1rem' }}>Click a day to see appointments.</p>}
+        {selected && <h3>{selectedLabel}</h3>}
         {selected && dayAppts.length === 0 && <p className="empty-msg" style={{ marginTop: '1rem' }}>No appointments this day.</p>}
         {dayAppts.map(a => (
           <div key={a.id} className="appt-card" onClick={() => setShowModal(a)}>

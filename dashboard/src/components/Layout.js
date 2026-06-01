@@ -16,8 +16,7 @@ const ProfileIcon = () => (
 const ClientsIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-    <circle cx="12" cy="13" r="2"/>
-    <path d="M9 22v-2a3 3 0 0 1 6 0v2"/>
+    <polyline points="9 22 9 12 15 12 15 22"/>
   </svg>
 );
 
@@ -29,13 +28,7 @@ const AddIcon = () => (
 
 const StaffIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="6" y="10" width="9" height="11" rx="1"/>
-    <path d="M9 10V7h3"/>
-    <path d="M12 8h4"/>
-    <path d="M17 5v6"/>
-    <path d="M19 6l1-1"/>
-    <path d="M20 9h1"/>
-    <path d="M19 12l1 1"/>
+    <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/>
   </svg>
 );
 

@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { getUsers, deleteUser, adminUpdateUser } from '../services/api';
 
+const InfoIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+  </svg>
+);
+
 const PencilIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -101,8 +107,8 @@ export default function ClientsPage() {
               <td>{c.email}</td>
               <td>{c.phone || '—'}</td>
               <td>
-                <button className="btn-icon" onClick={() => openDetail(c)} title="View / edit">
-                  <PencilIcon />
+                <button className="btn-icon" onClick={() => openDetail(c)} title="View details">
+                  <InfoIcon />
                 </button>
               </td>
             </tr>

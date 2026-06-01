@@ -11,6 +11,9 @@ Base.metadata.create_all(bind=engine)
 
 with engine.connect() as _conn:
     _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT TRUE"))
+    _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS zip_code VARCHAR DEFAULT ''"))
+    _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS city VARCHAR DEFAULT ''"))
+    _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS county VARCHAR DEFAULT ''"))
     _conn.commit()
 
 app = FastAPI(title="Abundios Cleaning API")

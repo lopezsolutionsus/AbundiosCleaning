@@ -348,6 +348,10 @@ def list_users(current_user=Depends(auth.get_current_user), db: Session = Depend
             "email": u.email,
             "first_name": u.first_name,
             "last_name": u.last_name,
+            "phone": getattr(u, "phone", "") or "",
+            "zip_code": getattr(u, "zip_code", "") or "",
+            "city": getattr(u, "city", "") or "",
+            "county": getattr(u, "county", "") or "",
             "role": u.role,
             "email_verified": u.email_verified,
             "created_at": u.created_at.isoformat() if u.created_at else None,
@@ -372,9 +376,12 @@ def delete_user(user_id: str, current_user=Depends(auth.get_current_user), db: S
 
 class AdminUpdateUserForm(BaseModel):
     first_name: str
-    last_name: Optional[str] = ""
-    phone: Optional[str] = ""
-    email: str
+    last_name:  Optional[str] = ""
+    phone:      Optional[str] = ""
+    email:      str
+    zip_code:   Optional[str] = ""
+    city:       Optional[str] = ""
+    county:     Optional[str] = ""
 
 
 @router.put("/users/{user_id}")
@@ -392,6 +399,9 @@ def admin_update_user(user_id: str, form: AdminUpdateUserForm, current_user=Depe
     user.last_name  = form.last_name
     user.phone      = form.phone
     user.email      = form.email
+    user.zip_code   = form.zip_code
+    user.city       = form.city
+    user.county     = form.county
     db.commit()
     db.refresh(user)
     return {
@@ -400,6 +410,9 @@ def admin_update_user(user_id: str, form: AdminUpdateUserForm, current_user=Depe
         "first_name": user.first_name,
         "last_name": user.last_name,
         "phone": user.phone,
+        "zip_code": user.zip_code,
+        "city": user.city,
+        "county": user.county,
         "role": user.role,
         "email_verified": user.email_verified,
         "created_at": user.created_at.isoformat() if user.created_at else None,

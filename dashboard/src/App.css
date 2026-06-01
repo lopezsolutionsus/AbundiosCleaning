@@ -460,6 +460,33 @@
   font-size: 0.95rem;
 }
 
+.filter-select {
+  padding: 0.45rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: 0.6rem;
+  font-size: 0.85rem;
+  color: #444;
+  background: white;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filter-select:focus { border-color: var(--pink-dark); }
+
+.filter-clear {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.82rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.filter-clear:hover { border-color: var(--pink-dark); color: var(--pink-dark); }
+
 /* Add Appointment Page */
 .appt-page {
   height: 100%;

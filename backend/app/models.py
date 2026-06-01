@@ -17,6 +17,9 @@ class User(Base):
     first_name      = Column(String, nullable=False, default="")
     last_name       = Column(String, nullable=False, default="")
     phone           = Column(String, default="")
+    zip_code        = Column(String, default="")
+    city            = Column(String, default="")
+    county          = Column(String, default="")
     role            = Column(String, default="client")  # admin / staff / client
     google_id       = Column(String, nullable=True)
     phone_verified  = Column(Boolean, server_default="false", default=False)

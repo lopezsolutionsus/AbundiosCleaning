@@ -21,6 +21,8 @@
   color: var(--pink-dark);
   margin-bottom: 0.3rem;
   padding: 0 0.5rem;
+  text-decoration: none;
+  display: block;
 }
 
 .sidebar-greeting {
@@ -63,6 +65,9 @@
   font-size: 0.85rem;
   padding: 0.5rem;
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .sidebar-logout:hover { color: var(--pink-dark); }
@@ -215,7 +220,7 @@
   transition: background 0.2s;
 }
 
-.btn-primary:hover { background: #c5607a; }
+.btn-primary:hover { background: var(--pink-hover); }
 
 .btn-secondary {
   background: none;

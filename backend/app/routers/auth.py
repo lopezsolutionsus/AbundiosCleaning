@@ -9,6 +9,7 @@ from google.auth.transport import requests as google_requests
 import requests as http_requests
 import os
 import secrets
+import random
 import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime, timedelta
@@ -386,9 +387,13 @@ def me(current_user=Depends(auth.get_current_user)):
 class UpdateProfileForm(BaseModel):
     first_name: str
     last_name: Optional[str] = ""
-    email: str
     phone: Optional[str] = ""
-    current_password: Optional[str] = None
+
+class RequestEmailChangeForm(BaseModel):
+    new_email: str
+
+class ConfirmEmailChangeForm(BaseModel):
+    code: str
 
 class ChangePasswordForm(BaseModel):
     current_password: str
@@ -397,13 +402,6 @@ class ChangePasswordForm(BaseModel):
 
 @router.put("/me")
 def update_me(form: UpdateProfileForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
-    if form.email.lower() != current_user.email:
-        if not form.current_password or not auth.verify_password(form.current_password, current_user.hashed_password):
-            raise HTTPException(status_code=400, detail="Incorrect password. Required to change email.")
-        existing = db.query(models.User).filter(models.User.email == form.email.lower()).first()
-        if existing:
-            raise HTTPException(status_code=400, detail="Email already in use")
-        current_user.email = form.email.lower()
     current_user.first_name = form.first_name
     current_user.last_name  = form.last_name
     current_user.phone      = form.phone
@@ -417,6 +415,76 @@ def update_me(form: UpdateProfileForm, current_user=Depends(auth.get_current_use
         "role": current_user.role,
         "phone": current_user.phone,
     }
+
+
+def _send_email_change_code(to_email: str, code: str, first_name: str):
+    if not SMTP_USER or not SMTP_PASS:
+        return
+    body = f"""Hi {first_name},
+
+We received a request to change the email address on your Abundios Cleaning account.
+
+Your verification code is: {code}
+
+This code expires in 15 minutes. If you didn't request this change, you can safely ignore this email.
+
+— Abundios Cleaning
+"""
+    msg = MIMEText(body)
+    msg["Subject"] = "Your email change verification code"
+    msg["From"]    = f"Abundios Cleaning <{SMTP_USER}>"
+    msg["To"]      = to_email
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+            server.ehlo()
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            server.sendmail(SMTP_USER, [to_email], msg.as_string())
+    except Exception:
+        pass
+
+
+@router.post("/me/request-email-change")
+def request_email_change(form: RequestEmailChangeForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    new_email = form.new_email.lower()
+    if new_email == current_user.email:
+        raise HTTPException(status_code=400, detail="New email is the same as your current email.")
+    if db.query(models.User).filter(models.User.email == new_email).first():
+        raise HTTPException(status_code=400, detail="Email already in use.")
+
+    db.query(models.EmailChangeToken).filter(
+        models.EmailChangeToken.user_id == current_user.id,
+        models.EmailChangeToken.used == False,
+    ).update({"used": True})
+
+    code = str(random.randint(100000, 999999))
+    db.add(models.EmailChangeToken(
+        user_id=current_user.id,
+        new_email=new_email,
+        code=code,
+        expires_at=datetime.utcnow() + timedelta(minutes=15),
+    ))
+    db.commit()
+    _send_email_change_code(current_user.email, code, current_user.first_name)
+    return {"message": "Code sent to your current email."}
+
+
+@router.post("/me/confirm-email-change")
+def confirm_email_change(form: ConfirmEmailChangeForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    record = db.query(models.EmailChangeToken).filter(
+        models.EmailChangeToken.user_id == current_user.id,
+        models.EmailChangeToken.code == form.code,
+        models.EmailChangeToken.used == False,
+    ).first()
+    if not record or record.expires_at < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Invalid or expired code.")
+    if db.query(models.User).filter(models.User.email == record.new_email).first():
+        raise HTTPException(status_code=400, detail="Email already in use.")
+
+    current_user.email = record.new_email
+    record.used = True
+    db.commit()
+    return {"message": "Email updated successfully.", "email": current_user.email}
 
 
 @router.put("/me/password")

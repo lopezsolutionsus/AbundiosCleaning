@@ -162,6 +162,18 @@ class PasswordResetToken(Base):
     created_at = Column(DateTime, server_default=func.now())
 
 
+class EmailChangeToken(Base):
+    __tablename__ = "email_change_tokens"
+
+    id         = Column(String, primary_key=True, default=gen_id)
+    user_id    = Column(String, ForeignKey("users.id"), nullable=False)
+    new_email  = Column(String, nullable=False)
+    code       = Column(String, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used       = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+
+
 class EmailVerificationToken(Base):
     __tablename__ = "email_verification_tokens"
 

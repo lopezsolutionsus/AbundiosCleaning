@@ -388,6 +388,7 @@ class UpdateProfileForm(BaseModel):
     last_name: Optional[str] = ""
     email: str
     phone: Optional[str] = ""
+    current_password: Optional[str] = None
 
 class ChangePasswordForm(BaseModel):
     current_password: str
@@ -397,6 +398,8 @@ class ChangePasswordForm(BaseModel):
 @router.put("/me")
 def update_me(form: UpdateProfileForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
     if form.email.lower() != current_user.email:
+        if not form.current_password or not auth.verify_password(form.current_password, current_user.hashed_password):
+            raise HTTPException(status_code=400, detail="Incorrect password. Required to change email.")
         existing = db.query(models.User).filter(models.User.email == form.email.lower()).first()
         if existing:
             raise HTTPException(status_code=400, detail="Email already in use")

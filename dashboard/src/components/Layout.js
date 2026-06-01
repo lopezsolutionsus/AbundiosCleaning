@@ -48,7 +48,7 @@ export default function Layout() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <div className="sidebar-logo">Abundios Cleaning</div>
+        <a className="sidebar-logo" href="https://abundioscleaning.com" style={{ textDecoration: 'none' }}>Abundios Cleaning</a>
         <nav>
           <NavLink to="/calendar"><CalendarIcon /> Calendar</NavLink>
           <NavLink to="/add-appointment"><AddIcon /> Add Appointment</NavLink>

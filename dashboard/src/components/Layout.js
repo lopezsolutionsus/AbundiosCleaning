@@ -26,6 +26,12 @@ const AddIcon = () => (
   </svg>
 );
 
+const InquiriesIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+);
+
 const StaffIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/>
@@ -54,6 +60,7 @@ export default function Layout() {
           <NavLink to="/calendar"><CalendarIcon /> Calendar</NavLink>
           <NavLink to="/add-appointment"><AddIcon /> Add Appointment</NavLink>
           <NavLink to="/clients"><ClientsIcon /> Clients</NavLink>
+          <NavLink to="/inquiries"><InquiriesIcon /> Inquiries</NavLink>
           {role === 'admin' && <NavLink to="/users"><StaffIcon /> Staff</NavLink>}
           <NavLink to="/profile"><ProfileIcon /> Profile</NavLink>
         </nav>

@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from ..database import get_db
 from .. import models
+from ..auth import get_current_user
 import os, smtplib
 from email.mime.text import MIMEText
 
@@ -36,6 +37,26 @@ def submit_contact(form: ContactForm, db: Session = Depends(get_db)):
     db.commit()
     _notify(form)
     return {"ok": True}
+
+
+@router.get("")
+def get_inquiries(user=Depends(get_current_user), db: Session = Depends(get_db)):
+    if user.role not in ("admin", "staff"):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=403, detail="Forbidden")
+    inquiries = db.query(models.ContactInquiry).order_by(models.ContactInquiry.created_at.desc()).all()
+    return [
+        {
+            "id":           i.id,
+            "name":         i.name,
+            "email":        i.email,
+            "phone":        i.phone,
+            "service_type": i.service_type,
+            "message":      i.message,
+            "created_at":   i.created_at.isoformat() if i.created_at else None,
+        }
+        for i in inquiries
+    ]
 
 
 def _notify(form: ContactForm):

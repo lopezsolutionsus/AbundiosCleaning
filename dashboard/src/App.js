@@ -4,6 +4,7 @@ import AddAppointmentPage from './pages/AddAppointmentPage';
 import ClientsPage from './pages/ClientsPage';
 import UsersPage from './pages/UsersPage';
 import ProfilePage from './pages/ProfilePage';
+import InquiriesPage from './pages/InquiriesPage';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="clients" element={<ClientsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="inquiries" element={<InquiriesPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

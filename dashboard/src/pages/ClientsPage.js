@@ -28,7 +28,7 @@ const PlusIcon = () => (
 );
 
 const EMPTY_FORM = { first_name: '', last_name: '', email: '', phone: '', zip_code: '', city: '', county: '' };
-const EMPTY_ADD_FORM = { first_name: '', last_name: '', phone: '', address: '' };
+const EMPTY_ADD_FORM = { first_name: '', last_name: '', email: '', phone: '', address: '' };
 
 export default function ClientsPage() {
   const [clients, setClients]               = useState([]);
@@ -310,6 +310,7 @@ export default function ClientsPage() {
                   <Field label="First name *"><input value={addForm.first_name} onChange={e => setAddForm({ ...addForm, first_name: e.target.value })} required /></Field>
                   <Field label="Last name"><input value={addForm.last_name} onChange={e => setAddForm({ ...addForm, last_name: e.target.value })} /></Field>
                 </div>
+                <Field label="Email (optional)"><input type="email" value={addForm.email} onChange={e => setAddForm({ ...addForm, email: e.target.value })} placeholder="client@email.com" /></Field>
                 <Field label="Phone"><input type="tel" value={addForm.phone} onChange={e => setAddForm({ ...addForm, phone: e.target.value })} /></Field>
                 <Field label="Address"><input value={addForm.address} onChange={e => setAddForm({ ...addForm, address: e.target.value })} placeholder="Street address" /></Field>
                 <div className="modal-actions" style={{ marginTop: '1.25rem' }}>

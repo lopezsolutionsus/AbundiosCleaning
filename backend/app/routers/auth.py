@@ -340,6 +340,7 @@ def reset_password(form: ResetPasswordForm, db: Session = Depends(get_db)):
 class AdminCreateClientForm(BaseModel):
     first_name: str
     last_name:  Optional[str] = ""
+    email:      Optional[str] = ""
     phone:      Optional[str] = ""
     address:    Optional[str] = ""
 
@@ -349,9 +350,14 @@ def admin_create_client(form: AdminCreateClientForm, current_user=Depends(auth.g
     if current_user.role not in ("admin", "staff"):
         raise HTTPException(status_code=403, detail="Admins only")
     import secrets as _secrets
+    if form.email:
+        existing = db.query(models.User).filter(models.User.email == form.email.lower()).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already in use")
     client = models.User(
         first_name=form.first_name,
         last_name=form.last_name or "",
+        email=form.email.lower() if form.email else None,
         phone=form.phone or "",
         address=form.address or "",
         role="client",

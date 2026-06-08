@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
-from .routers import auth, appointments, client as client_router
+from .routers import auth, appointments, client as client_router, contact as contact_router
 from . import models
 from .auth import hash_password
 from sqlalchemy.orm import Session
@@ -29,6 +29,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(appointments.router)
 app.include_router(client_router.router)
+app.include_router(contact_router.router)
 
 @app.on_event("startup")
 def seed_defaults():

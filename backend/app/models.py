@@ -140,6 +140,18 @@ class Appointment(Base):
     review       = relationship("Review", back_populates="appointment", uselist=False)
 
 
+class ContactInquiry(Base):
+    __tablename__ = "contact_inquiries"
+
+    id           = Column(String, primary_key=True, default=gen_id)
+    name         = Column(String, nullable=False)
+    email        = Column(String, nullable=False)
+    phone        = Column(String, default="")
+    service_type = Column(String, default="")
+    message      = Column(Text, default="")
+    created_at   = Column(DateTime, server_default=func.now())
+
+
 class Review(Base):
     __tablename__ = "reviews"
 

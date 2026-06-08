@@ -735,6 +735,33 @@ nav {
 
 .svc-area { color: rgba(255,255,255,0.22); font-size: 0.82rem; }
 
+.quote-form { margin-top: 2rem; }
+.qf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.qf-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+.qf-field label { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.6); }
+.qf-field input,
+.qf-field select,
+.qf-field textarea {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 0.6rem;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.qf-field input::placeholder,
+.qf-field textarea::placeholder { color: rgba(255,255,255,0.3); }
+.qf-field select option { background: #1a1a2e; color: white; }
+.qf-field input:focus,
+.qf-field select:focus,
+.qf-field textarea:focus { border-color: var(--red); }
+.qf-submit { width: 100%; padding: 1rem; font-size: 1rem; cursor: pointer; border: none; }
+.qf-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+@media (max-width: 600px) { .qf-row { grid-template-columns: 1fr; } }
+
 /* ─────────────────────────────────────────────
    FOOTER
 ───────────────────────────────────────────── */

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You | Abundios Cleaning</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .thankyou-section {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      background: var(--bg-alt);
+    }
+    .thankyou-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 3.5rem 3rem;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    .thankyou-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--red-lt);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+    }
+    .thankyou-card h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    .thankyou-card p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    .thankyou-card .btn-primary {
+      display: inline-block;
+      background: var(--red);
+      color: var(--white);
+      padding: 0.85rem 2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .thankyou-card .btn-primary:hover { background: var(--red-dk); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="logo-link">
+        <img src="wordmark.svg" alt="Abundios Cleaning" style="height:44px;width:auto;display:block" />
+      </a>
+    </div>
+  </nav>
+
+  <section class="thankyou-section">
+    <div class="thankyou-card">
+      <div class="thankyou-icon">✓</div>
+      <h1>Request Received!</h1>
+      <p>Thank you for reaching out to Abundios Cleaning. We'll review your request and get back to you shortly with a personalized quote.</p>
+      <a href="/" class="btn-primary">Back to Home</a>
+    </div>
+  </section>
+
+</body>
+</html>

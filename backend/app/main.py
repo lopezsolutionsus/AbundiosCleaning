@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
 from .routers import auth, appointments, client as client_router, contact as contact_router
+from .routers import reviews as reviews_router
 from . import models
 from .auth import hash_password
 from sqlalchemy.orm import Session
@@ -14,6 +15,18 @@ with engine.connect() as _conn:
     _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS zip_code VARCHAR DEFAULT ''"))
     _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS city VARCHAR DEFAULT ''"))
     _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS county VARCHAR DEFAULT ''"))
+    _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR DEFAULT 'active'"))
+    _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN DEFAULT FALSE"))
+    _conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS address VARCHAR DEFAULT ''"))
+    _conn.execute(text("ALTER TABLE users ALTER COLUMN email DROP NOT NULL"))
+    _conn.execute(text("ALTER TABLE reviews ALTER COLUMN appointment_id DROP NOT NULL"))
+    _conn.execute(text("ALTER TABLE reviews ALTER COLUMN user_id DROP NOT NULL"))
+    _conn.execute(text("ALTER TABLE reviews ALTER COLUMN rating DROP NOT NULL"))
+    _conn.execute(text("ALTER TABLE reviews ADD COLUMN IF NOT EXISTS reviewer_name VARCHAR DEFAULT ''"))
+    _conn.execute(text("ALTER TABLE reviews ADD COLUMN IF NOT EXISTS status VARCHAR DEFAULT 'approved'"))
+    _conn.execute(text("ALTER TABLE reviews ADD COLUMN IF NOT EXISTS review_token VARCHAR"))
+    _conn.execute(text("ALTER TABLE reviews ADD COLUMN IF NOT EXISTS token_expires_at TIMESTAMP"))
+    _conn.execute(text("ALTER TABLE reviews ADD COLUMN IF NOT EXISTS token_used BOOLEAN DEFAULT FALSE"))
     _conn.commit()
 
 app = FastAPI(title="Abundios Cleaning API")
@@ -30,6 +43,7 @@ app.include_router(auth.router)
 app.include_router(appointments.router)
 app.include_router(client_router.router)
 app.include_router(contact_router.router)
+app.include_router(reviews_router.router)
 
 @app.on_event("startup")
 def seed_defaults():

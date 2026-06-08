@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave a Review | Abundios Cleaning</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --red:      #E90A46;
+      --red-dk:   #c20839;
+      --red-lt:   #fde8ee;
+      --text:     #111827;
+      --muted:    #6b7280;
+      --border:   #e5e7eb;
+      --white:    #ffffff;
+      --bg-alt:   #f9fafb;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg-alt);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.97);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+    }
+    .logo-link { display: flex; align-items: center; text-decoration: none; }
+
+    .page-wrap {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    }
+
+    .card-title {
+      font-size: 1.6rem;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .card-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Star rating */
+    .stars-wrap {
+      display: flex;
+      gap: 0.35rem;
+      margin-bottom: 1.5rem;
+    }
+    .star {
+      font-size: 2.2rem;
+      cursor: pointer;
+      color: #d1d5db;
+      transition: color 0.15s, transform 0.1s;
+      user-select: none;
+      line-height: 1;
+    }
+    .star.on { color: #f59e0b; }
+    .star:hover { transform: scale(1.1); }
+
+    .form-field {
+      margin-bottom: 1.1rem;
+    }
+    .form-field label {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus { border-color: var(--red); }
+    .form-field textarea { resize: vertical; min-height: 90px; }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--red-dk); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-ghost {
+      display: inline-block;
+      background: none;
+      color: var(--red);
+      border: 2px solid var(--red);
+      border-radius: 9999px;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 0.75rem;
+    }
+    .btn-ghost:hover { background: var(--red-lt); }
+
+    .error-msg {
+      color: #c0392b;
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: #fff5f5;
+      border: 1px solid #fca5a5;
+      border-radius: 0.5rem;
+    }
+
+    .success-section {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--red-lt);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 1.75rem;
+    }
+    .success-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .success-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    .signup-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+    .signup-sub {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .loading-wrap {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 520px) {
+      .page-wrap { padding: 2rem 1rem 3rem; }
+      .card { padding: 2rem 1.25rem; }
+      .grid2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="logo-link">
+        <img src="wordmark.svg" alt="Abundios Cleaning" style="height:40px;width:auto;display:block" />
+      </a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="card" id="mainCard">
+      <div class="loading-wrap" id="loadingState">
+        <p>Loading…</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = 'https://api.abundioscleaning.com/api';
+    const params = new URLSearchParams(window.location.search);
+    const token  = params.get('token');
+
+    let clientName = '';
+    let selectedRating = 0;
+
+    async function init() {
+      const card = document.getElementById('mainCard');
+
+      if (!token) {
+        showError(card, 'No review token found. Please use the link we sent you.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API}/reviews/by-token/${token}`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        clientName = data.client_name || '';
+        renderReviewForm(card);
+      } catch {
+        showError(card, 'This review link is invalid or has expired. Please contact us if you need a new one.');
+      }
+    }
+
+    function showError(card, msg) {
+      card.innerHTML = `
+        <div class="success-section">
+          <div class="success-icon">✗</div>
+          <h1 class="success-title" style="font-family:'Playfair Display',serif">Link Expired</h1>
+          <p class="success-sub">${msg}</p>
+          <a href="/" class="btn-ghost">Back to Home</a>
+        </div>
+      `;
+    }
+
+    function renderReviewForm(card) {
+      const greeting = clientName ? `Hi ${clientName}!` : 'Hi there!';
+      card.innerHTML = `
+        <h1 class="card-title">${greeting}</h1>
+        <p class="card-sub">How was your cleaning experience with Abundios? We'd love your honest feedback.</p>
+
+        <div class="stars-wrap" id="starsWrap">
+          <span class="star" data-v="1">★</span>
+          <span class="star" data-v="2">★</span>
+          <span class="star" data-v="3">★</span>
+          <span class="star" data-v="4">★</span>
+          <span class="star" data-v="5">★</span>
+        </div>
+
+        <form id="reviewForm">
+          <div class="form-field">
+            <label>Your Name</label>
+            <input id="reviewerName" type="text" value="${clientName}" placeholder="Your name" />
+          </div>
+          <div class="form-field">
+            <label>Comment (optional)</label>
+            <textarea id="reviewComment" placeholder="Tell us about your experience…"></textarea>
+          </div>
+          <div id="reviewError"></div>
+          <button type="submit" class="btn-primary" id="submitBtn">Submit Review</button>
+        </form>
+      `;
+
+      // Star interaction
+      const stars = document.querySelectorAll('.star');
+      stars.forEach(s => {
+        s.addEventListener('mouseenter', () => highlightStars(+s.dataset.v));
+        s.addEventListener('mouseleave', () => highlightStars(selectedRating));
+        s.addEventListener('click', () => {
+          selectedRating = +s.dataset.v;
+          highlightStars(selectedRating);
+        });
+      });
+
+      document.getElementById('reviewForm').addEventListener('submit', handleReviewSubmit);
+    }
+
+    function highlightStars(n) {
+      document.querySelectorAll('.star').forEach(s => {
+        s.classList.toggle('on', +s.dataset.v <= n);
+      });
+    }
+
+    async function handleReviewSubmit(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('reviewError');
+      errEl.innerHTML = '';
+
+      if (!selectedRating) {
+        errEl.innerHTML = '<p class="error-msg">Please select a star rating.</p>';
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      const payload = {
+        rating:        selectedRating,
+        comment:       document.getElementById('reviewComment').value,
+        reviewer_name: document.getElementById('reviewerName').value,
+      };
+
+      try {
+        const res = await fetch(`${API}/reviews/by-token/${token}`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error();
+        renderThankYou();
+      } catch {
+        errEl.innerHTML = '<p class="error-msg">Something went wrong. Please try again.</p>';
+        btn.disabled = false;
+        btn.textContent = 'Submit Review';
+      }
+    }
+
+    function renderThankYou() {
+      const card = document.getElementById('mainCard');
+      card.innerHTML = `
+        <div class="success-section">
+          <div class="success-icon">★</div>
+          <h1 class="success-title" style="font-family:'Playfair Display',serif">Thank You!</h1>
+          <p class="success-sub">Your review has been submitted and will appear on our website once approved. We truly appreciate your feedback!</p>
+        </div>
+
+        <hr class="divider" />
+
+        <h2 class="signup-title" style="font-family:'Playfair Display',serif">Create Your Account</h2>
+        <p class="signup-sub">Access your appointments, request cleanings, and manage your home — all in one place.</p>
+
+        <form id="signupForm">
+          <div class="grid2">
+            <div class="form-field">
+              <label>First Name</label>
+              <input id="sfFirstName" type="text" value="${clientName}" placeholder="Jane" />
+            </div>
+            <div class="form-field">
+              <label>Last Name</label>
+              <input id="sfLastName" type="text" placeholder="Smith" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Email *</label>
+            <input id="sfEmail" type="email" placeholder="jane@email.com" required />
+          </div>
+          <div class="form-field">
+            <label>Phone</label>
+            <input id="sfPhone" type="tel" placeholder="(434) 000-0000" />
+          </div>
+          <div class="form-field">
+            <label>Password *</label>
+            <input id="sfPassword" type="password" placeholder="At least 6 characters" required minlength="6" />
+          </div>
+          <div id="signupError"></div>
+          <button type="submit" class="btn-primary" id="signupBtn">Create Account &amp; Sign In</button>
+        </form>
+
+        <a href="/" class="btn-ghost">Skip — Back to Home</a>
+      `;
+
+      document.getElementById('signupForm').addEventListener('submit', handleSignup);
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('signupError');
+      errEl.innerHTML = '';
+      const btn = document.getElementById('signupBtn');
+      btn.disabled = true;
+      btn.textContent = 'Creating account…';
+
+      const payload = {
+        token:      token,
+        email:      document.getElementById('sfEmail').value,
+        password:   document.getElementById('sfPassword').value,
+        first_name: document.getElementById('sfFirstName').value,
+        last_name:  document.getElementById('sfLastName').value,
+        phone:      document.getElementById('sfPhone').value,
+      };
+
+      try {
+        const res = await fetch(`${API}/reviews/by-token/${token}/signup`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.detail || 'Failed to create account');
+        }
+        const data = await res.json();
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('first_name', data.first_name);
+        window.location.href = 'https://portal.abundioscleaning.com';
+      } catch (err) {
+        errEl.innerHTML = `<p class="error-msg">${err.message || 'Something went wrong. Please try again.'}</p>`;
+        btn.disabled = false;
+        btn.textContent = 'Create Account & Sign In';
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

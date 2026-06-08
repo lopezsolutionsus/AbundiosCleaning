@@ -184,40 +184,8 @@
       <p class="s-tag">Reviews</p>
       <h2>What Our Clients Say</h2>
       <p class="s-sub">Don't take our word for it — here's what Charlottesville families are saying.</p>
-      <div class="reviews">
-        <div class="review fade-in">
-          <div class="review-top">
-            <div class="avatar">S</div>
-            <div>
-              <div class="rname">Sarah M.</div>
-              <div class="rloc">Charlottesville, VA</div>
-            </div>
-            <div class="stars">★★★★★</div>
-          </div>
-          <p>"Absolutely amazing service! My home has never looked so clean. I've been using Abundios every two weeks and couldn't be happier."</p>
-        </div>
-        <div class="review fade-in">
-          <div class="review-top">
-            <div class="avatar">J</div>
-            <div>
-              <div class="rname">James R.</div>
-              <div class="rloc">Crozet, VA</div>
-            </div>
-            <div class="stars">★★★★★</div>
-          </div>
-          <p>"Very professional and thorough. They paid attention to every detail and even cleaned areas I didn't expect. Highly recommend!"</p>
-        </div>
-        <div class="review fade-in">
-          <div class="review-top">
-            <div class="avatar">M</div>
-            <div>
-              <div class="rname">Maria L.</div>
-              <div class="rloc">Waynesboro, VA</div>
-            </div>
-            <div class="stars">★★★★★</div>
-          </div>
-          <p>"Great price, great service, great people. Abundios Cleaning is now my go-to for keeping my home spotless."</p>
-        </div>
+      <div class="reviews" id="reviewsContainer">
+        <!-- loaded dynamically -->
       </div>
     </div>
   </section>
@@ -378,6 +346,49 @@
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // Dynamic reviews from API
+    const FALLBACK_REVIEWS = [
+      { reviewer_name: 'Sarah M.', rating: 5, comment: 'Absolutely amazing service! My home has never looked so clean. I\'ve been using Abundios every two weeks and couldn\'t be happier.' },
+      { reviewer_name: 'James R.', rating: 5, comment: 'Very professional and thorough. They paid attention to every detail and even cleaned areas I didn\'t expect. Highly recommend!' },
+      { reviewer_name: 'Maria L.', rating: 5, comment: 'Great price, great service, great people. Abundios Cleaning is now my go-to for keeping my home spotless.' },
+    ];
+
+    function renderReviews(list) {
+      const container = document.getElementById('reviewsContainer');
+      if (!container) return;
+      container.innerHTML = list.map(r => {
+        const initial = (r.reviewer_name || 'A').charAt(0).toUpperCase();
+        const stars = '★'.repeat(r.rating || 5) + '☆'.repeat(5 - (r.rating || 5));
+        return `
+          <div class="review fade-in">
+            <div class="review-top">
+              <div class="avatar">${initial}</div>
+              <div>
+                <div class="rname">${r.reviewer_name || 'Anonymous'}</div>
+              </div>
+              <div class="stars">${stars}</div>
+            </div>
+            <p>"${r.comment || ''}"</p>
+          </div>
+        `;
+      }).join('');
+      container.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    }
+
+    (async function loadReviews() {
+      try {
+        const res = await fetch('https://api.abundioscleaning.com/api/reviews/public');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            renderReviews(data.slice(0, 6));
+            return;
+          }
+        }
+      } catch (_) {}
+      renderReviews(FALLBACK_REVIEWS);
+    })();
   </script>
 </body>
 </html>

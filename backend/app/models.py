@@ -11,7 +11,7 @@ class User(Base):
     __tablename__ = "users"
 
     id              = Column(String, primary_key=True, default=gen_id)
-    email           = Column(String, unique=True, nullable=False)
+    email           = Column(String, unique=True, nullable=True)
     username        = Column(String, unique=True, nullable=True)
     hashed_password = Column(String, nullable=True)
     first_name      = Column(String, nullable=False, default="")
@@ -25,6 +25,9 @@ class User(Base):
     phone_verified  = Column(Boolean, server_default="false", default=False)
     email_verified  = Column(Boolean, server_default="true", default=False)
     created_at      = Column(DateTime, server_default=func.now())
+    status          = Column(String, default="active")
+    is_deleted      = Column(Boolean, default=False)
+    address         = Column(String, default="")
 
     properties         = relationship("Property", back_populates="owner", cascade="all, delete")
     quotes             = relationship("Quote", back_populates="client", cascade="all, delete")
@@ -155,12 +158,17 @@ class ContactInquiry(Base):
 class Review(Base):
     __tablename__ = "reviews"
 
-    id             = Column(String, primary_key=True, default=gen_id)
-    appointment_id = Column(String, ForeignKey("appointments.id"), nullable=False, unique=True)
-    user_id        = Column(String, ForeignKey("users.id"), nullable=False)
-    rating         = Column(Integer, nullable=False)
-    comment        = Column(Text, default="")
-    created_at     = Column(DateTime, server_default=func.now())
+    id               = Column(String, primary_key=True, default=gen_id)
+    appointment_id   = Column(String, ForeignKey("appointments.id"), nullable=True)
+    user_id          = Column(String, ForeignKey("users.id"), nullable=True)
+    rating           = Column(Integer, nullable=True)
+    comment          = Column(Text, default="")
+    created_at       = Column(DateTime, server_default=func.now())
+    reviewer_name    = Column(String, default="")
+    status           = Column(String, default="approved")
+    review_token     = Column(String, unique=True, nullable=True)
+    token_expires_at = Column(DateTime, nullable=True)
+    token_used       = Column(Boolean, default=False)
 
     appointment = relationship("Appointment", back_populates="review")
     author      = relationship("User", back_populates="reviews")

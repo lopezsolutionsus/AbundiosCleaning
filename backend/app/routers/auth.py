@@ -337,6 +337,76 @@ def reset_password(form: ResetPasswordForm, db: Session = Depends(get_db)):
     return {"message": "Password updated successfully."}
 
 
+class AdminCreateClientForm(BaseModel):
+    first_name: str
+    last_name:  Optional[str] = ""
+    phone:      Optional[str] = ""
+    address:    Optional[str] = ""
+
+
+@router.post("/admin/clients")
+def admin_create_client(form: AdminCreateClientForm, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ("admin", "staff"):
+        raise HTTPException(status_code=403, detail="Admins only")
+    import secrets as _secrets
+    client = models.User(
+        first_name=form.first_name,
+        last_name=form.last_name or "",
+        phone=form.phone or "",
+        address=form.address or "",
+        role="client",
+        status="pending",
+        email_verified=True,
+    )
+    db.add(client)
+    db.commit()
+    db.refresh(client)
+    # Generate review token
+    token = _secrets.token_urlsafe(32)
+    from datetime import datetime, timedelta
+    review = models.Review(
+        user_id=client.id,
+        review_token=token,
+        token_expires_at=datetime.utcnow() + timedelta(days=30),
+        token_used=False,
+        status="token_pending",
+    )
+    db.add(review)
+    db.commit()
+    return {
+        "id": client.id,
+        "first_name": client.first_name,
+        "last_name": client.last_name,
+        "phone": client.phone,
+        "address": client.address,
+        "status": client.status,
+        "role": client.role,
+        "review_token": token,
+        "email": None,
+        "email_verified": True,
+        "created_at": client.created_at.isoformat() if client.created_at else None,
+    }
+
+
+@router.post("/admin/clients/{client_id}/review-token")
+def generate_review_token(client_id: str, current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role not in ("admin", "staff"):
+        raise HTTPException(status_code=403, detail="Admins only")
+    import secrets as _secrets
+    from datetime import datetime, timedelta
+    token = _secrets.token_urlsafe(32)
+    review = models.Review(
+        user_id=client_id,
+        review_token=token,
+        token_expires_at=datetime.utcnow() + timedelta(days=30),
+        token_used=False,
+        status="token_pending",
+    )
+    db.add(review)
+    db.commit()
+    return {"token": token, "link": f"https://abundioscleaning.com/review?token={token}"}
+
+
 @router.get("/clients/upcoming-appointments")
 def clients_with_upcoming(current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
     if current_user.role != "admin":
@@ -353,7 +423,7 @@ def clients_with_upcoming(current_user=Depends(auth.get_current_user), db: Sessi
 def list_users(current_user=Depends(auth.get_current_user), db: Session = Depends(get_db)):
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Admins only")
-    users = db.query(models.User).order_by(models.User.created_at.desc()).all()
+    users = db.query(models.User).filter(models.User.is_deleted != True).order_by(models.User.created_at.desc()).all()
     return [
         {
             "id": u.id,
@@ -364,6 +434,8 @@ def list_users(current_user=Depends(auth.get_current_user), db: Session = Depend
             "zip_code": getattr(u, "zip_code", "") or "",
             "city": getattr(u, "city", "") or "",
             "county": getattr(u, "county", "") or "",
+            "address": getattr(u, "address", "") or "",
+            "status": getattr(u, "status", "active") or "active",
             "role": u.role,
             "email_verified": u.email_verified,
             "created_at": u.created_at.isoformat() if u.created_at else None,
@@ -381,7 +453,7 @@ def delete_user(user_id: str, current_user=Depends(auth.get_current_user), db: S
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    db.delete(user)
+    user.is_deleted = True
     db.commit()
     return {"ok": True}
 

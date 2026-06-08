@@ -46,3 +46,9 @@ export const updateAppointment = (id, data) => api.put(`/appointments/${id}`, da
 export const deleteAppointment = id => api.delete(`/appointments/${id}`);
 
 export const getInquiries = () => api.get('/contact');
+
+export const adminCreateClient = data => api.post('/auth/admin/clients', data);
+export const generateReviewToken = clientId => api.post(`/auth/admin/clients/${clientId}/review-token`);
+export const getReviews = () => api.get('/reviews');
+export const approveReview = id => api.put(`/reviews/${id}/approve`);
+export const rejectReview = id => api.put(`/reviews/${id}/reject`);

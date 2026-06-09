@@ -280,45 +280,63 @@ nav {
 ───────────────────────────────────────────── */
 .stats {
   background: var(--dark);
-  padding: 3rem 2rem;
+  padding: 5rem 2rem;
 }
 
 .stats-inner {
   max-width: 1160px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 3.5rem;
 }
 
-.stat { text-align: center; }
+.stats-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.stats-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  color: white;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.stat {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+.stat:first-child { border-left: none; }
+
+.stat-ico {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  opacity: 0.85;
+}
 
 .stat-num {
   font-family: 'Playfair Display', serif;
-  font-size: 5rem;
+  font-size: 3.25rem;
   font-weight: 700;
   color: white;
   line-height: 1;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.6rem;
 }
 
 .stat-num span { color: var(--red); }
 
 .stat-lbl {
-  font-size: 0.95rem;
-  color: rgba(255,255,255,0.55);
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 110px;
-  background: rgba(255,255,255,0.1);
-  flex-shrink: 0;
 }
 
 /* ─────────────────────────────────────────────
@@ -330,6 +348,8 @@ section {
   flex-direction: column;
   justify-content: center;
 }
+section.no-snap { min-height: auto; }
+
 .hero-inner,
 .stats-inner,
 .section-inner,
@@ -925,10 +945,14 @@ footer {
   .step-arrow  { display: none; }
   .steps       { gap: 1rem; }
 
-  .stat-divider { display: none; }
-  .stats-inner  { gap: 2.5rem; }
-  .stat-num     { font-size: 3.5rem; }
-  .stat-lbl     { font-size: 0.8rem; }
+  .stats             { padding: 3.5rem 1.5rem; }
+  .stats-header h2   { font-size: 1.8rem; }
+  .stats-header      { margin-bottom: 2.5rem; }
+  .stats-grid        { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .stat              { border-left: none; padding: 1rem 0.5rem; }
+  .stat-num          { font-size: 2.6rem; }
+  .stat-ico          { font-size: 1.4rem; margin-bottom: 0.6rem; }
+  .stat-lbl          { font-size: 0.7rem; }
 
   .footer-top { flex-direction: column; gap: 1rem; text-align: center; }
   .footer-contact { justify-content: center; }

@@ -71,26 +71,33 @@
   </section>
 
   <!-- STATS -->
-  <section class="stats">
+  <section class="stats no-snap">
     <div class="stats-inner">
-      <div class="stat">
-        <div class="stat-num">100<span>+</span></div>
-        <div class="stat-lbl">Happy Clients</div>
+      <div class="stats-header">
+        <p class="s-tag-light">Trusted by Charlottesville</p>
+        <h2>The numbers behind the shine</h2>
       </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <div class="stat-num">5.0<span>★</span></div>
-        <div class="stat-lbl">Average Rating</div>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <div class="stat-num">100<span>%</span></div>
-        <div class="stat-lbl">Satisfaction Rate</div>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <div class="stat-num">1<span>hr</span></div>
-        <div class="stat-lbl">Service Radius</div>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-ico">👥</div>
+          <div class="stat-num">100<span>+</span></div>
+          <div class="stat-lbl">Happy Clients</div>
+        </div>
+        <div class="stat">
+          <div class="stat-ico">⭐</div>
+          <div class="stat-num">5.0<span>★</span></div>
+          <div class="stat-lbl">Average Rating</div>
+        </div>
+        <div class="stat">
+          <div class="stat-ico">✨</div>
+          <div class="stat-num">100<span>%</span></div>
+          <div class="stat-lbl">Satisfaction Rate</div>
+        </div>
+        <div class="stat">
+          <div class="stat-ico">📍</div>
+          <div class="stat-num">1<span>hr</span></div>
+          <div class="stat-lbl">Service Radius</div>
+        </div>
       </div>
     </div>
   </section>
@@ -387,7 +394,7 @@
 
     // Section snap scroll
     (function() {
-      const secs = Array.from(document.querySelectorAll('section'));
+      const secs = Array.from(document.querySelectorAll('section:not(.no-snap)'));
       let locked = false;
 
       function navH() { return document.querySelector('nav')?.offsetHeight || 0; }

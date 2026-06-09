@@ -389,6 +389,47 @@
       } catch (_) {}
       renderReviews(FALLBACK_REVIEWS);
     })();
+
+    // Section snap scroll
+    (function() {
+      const secs = Array.from(document.querySelectorAll('section'));
+      let locked = false;
+
+      function navH() { return document.querySelector('nav')?.offsetHeight || 0; }
+
+      function currentIdx() {
+        const y = window.scrollY + navH() + 20;
+        let idx = 0;
+        for (let i = 0; i < secs.length; i++) {
+          if (secs[i].offsetTop <= y) idx = i;
+        }
+        return idx;
+      }
+
+      function snapTo(idx) {
+        if (idx < 0 || idx >= secs.length) return;
+        window.scrollTo({ top: Math.max(0, secs[idx].offsetTop - navH()), behavior: 'smooth' });
+        locked = true;
+        setTimeout(() => { locked = false; }, 900);
+      }
+
+      window.addEventListener('wheel', function(e) {
+        if (locked) { e.preventDefault(); return; }
+        const next = currentIdx() + (e.deltaY > 0 ? 1 : -1);
+        if (next < 0 || next >= secs.length) return;
+        e.preventDefault();
+        snapTo(next);
+      }, { passive: false });
+
+      let t0 = 0;
+      window.addEventListener('touchstart', e => { t0 = e.touches[0].clientY; }, { passive: true });
+      window.addEventListener('touchend', function(e) {
+        if (locked) return;
+        const diff = t0 - e.changedTouches[0].clientY;
+        if (Math.abs(diff) < 40) return;
+        snapTo(currentIdx() + (diff > 0 ? 1 : -1));
+      }, { passive: true });
+    })();
   </script>
 </body>
 </html>

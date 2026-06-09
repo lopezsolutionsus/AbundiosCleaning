@@ -323,6 +323,18 @@ nav {
 /* ─────────────────────────────────────────────
    SECTION SHARED
 ───────────────────────────────────────────── */
+section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hero-inner,
+.stats-inner,
+.section-inner,
+.about-inner,
+.contact-inner { width: 100%; }
+
 .section { }
 .bg-white { background: var(--white); }
 .bg-alt   { background: var(--bg-alt); }

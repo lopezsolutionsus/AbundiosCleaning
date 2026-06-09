@@ -278,38 +278,6 @@ nav {
 /* ─────────────────────────────────────────────
    STATS
 ───────────────────────────────────────────── */
-/* About stats strip */
-.about-stats {
-  max-width: 1160px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 2.5rem 2rem 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  border-top: 1px solid var(--border);
-}
-
-.astat { text-align: center; }
-
-.astat-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.6rem;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.astat-num span { color: var(--red); }
-
-.astat-lbl {
-  font-size: 0.74rem;
-  color: var(--muted);
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
 
 /* ─────────────────────────────────────────────
    SECTION SHARED
@@ -540,7 +508,7 @@ section.no-snap { min-height: auto; }
 .about-inner {
   max-width: 1160px;
   margin: 0 auto;
-  padding: 3rem 2rem 2.5rem;
+  padding: 4rem 2rem;
   display: flex;
   gap: 5rem;
   align-items: center;
@@ -903,7 +871,7 @@ footer {
 
   .about-inner {
     flex-direction: column;
-    padding: 2.5rem 1.5rem 2rem;
+    padding: 3rem 1.5rem;
     gap: 3rem;
   }
 
@@ -917,9 +885,6 @@ footer {
   .step-arrow  { display: none; }
   .steps       { gap: 1rem; }
 
-  .about-stats { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; padding: 2rem 1.5rem 0; }
-  .astat-num   { font-size: 2rem; }
-  .astat-lbl   { font-size: 0.7rem; }
 
   .footer-top { flex-direction: column; gap: 1rem; text-align: center; }
   .footer-contact { justify-content: center; }

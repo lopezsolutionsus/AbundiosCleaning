@@ -192,6 +192,9 @@ nav {
 }
 
 .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   background: var(--bg-alt);
   border: 1px solid var(--border);
   color: var(--muted);
@@ -901,3 +904,14 @@ footer {
 
   .footer-links { justify-content: center; }
 }
+
+/* ── LUCIDE ICONS ── */
+.hero-badge svg,
+.chip svg            { width: 14px; height: 14px; stroke-width: 2.25; }
+.chip svg.lucide-star { color: #FFD700; fill: #FFD700; }
+.card-ico svg        { width: 28px; height: 28px; color: var(--red); stroke-width: 2; }
+.card-ico svg.lucide-sparkles { color: #FFD700; fill: #FFD700; }
+.hero-float-icon svg { width: 28px; height: 28px; color: var(--red); stroke-width: 2; }
+.chk svg             { width: 13px; height: 13px; stroke-width: 3; }
+.footer-contact-ico svg { width: 16px; height: 16px; stroke-width: 2; display: block; }
+.footer-contact-ico  { display: inline-flex; align-items: center; }

@@ -103,6 +103,13 @@
       transition: background 0.2s, transform 0.2s;
     }
     .btn-submit:hover { background: var(--red-dk); transform: translateY(-1px); }
+    .btn-submit:disabled {
+      background: var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-submit:disabled:hover { background: var(--border); transform: none; }
     .error-msg {
       color: var(--red);
       font-size: 0.85rem;
@@ -218,7 +225,7 @@
         </div>
       </div>
 
-      <button class="btn-submit" onclick="login()">Continue</button>
+      <button class="btn-submit" id="submitBtn" onclick="login()" disabled>Continue</button>
       <p class="error-msg" id="errorMsg">Incorrect email/username or password.</p>
       <a href="/forgot-password" class="forgot-link" id="forgotLink">Forgot password?</a>
 
@@ -234,7 +241,16 @@
   </div>
 
   <script>
-    window.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      const id  = document.getElementById('identifier');
+      const pw  = document.getElementById('password');
+      const btn = document.getElementById('submitBtn');
+      const sync = () => { btn.disabled = !(id.value.trim() && pw.value.trim()); };
+      id.addEventListener('input', sync);
+      pw.addEventListener('input', sync);
+      sync();
+    });
 
     function togglePw() {
       const input = document.getElementById('password');
@@ -286,7 +302,7 @@
     }
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') login();
+      if (e.key === 'Enter' && !document.getElementById('submitBtn').disabled) login();
     });
 
     function googleLogin() {

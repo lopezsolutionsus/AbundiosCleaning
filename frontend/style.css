@@ -290,32 +290,33 @@ nav {
   align-items: center;
   justify-content: space-around;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 3.5rem;
 }
 
 .stat { text-align: center; }
 
 .stat-num {
   font-family: 'Playfair Display', serif;
-  font-size: 2.5rem;
+  font-size: 5rem;
   font-weight: 700;
   color: white;
   line-height: 1;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.9rem;
 }
 
 .stat-num span { color: var(--red); }
 
 .stat-lbl {
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.45);
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.55);
   font-weight: 500;
-  letter-spacing: 0.3px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .stat-divider {
   width: 1px;
-  height: 44px;
+  height: 110px;
   background: rgba(255,255,255,0.1);
   flex-shrink: 0;
 }
@@ -788,6 +789,46 @@ footer {
   max-width: 1160px;
   margin: 0 auto;
   display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.footer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.footer-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.footer-contact-link:hover { color: white; }
+
+.footer-contact-ico { font-size: 1rem; }
+
+.footer-dot { color: rgba(255,255,255,0.2); }
+
+.footer-bottom {
+  display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -885,7 +926,12 @@ footer {
   .steps       { gap: 1rem; }
 
   .stat-divider { display: none; }
-  .stats-inner  { gap: 1.5rem; }
+  .stats-inner  { gap: 2.5rem; }
+  .stat-num     { font-size: 3.5rem; }
+  .stat-lbl     { font-size: 0.8rem; }
+
+  .footer-top { flex-direction: column; gap: 1rem; text-align: center; }
+  .footer-contact { justify-content: center; }
 
   .footer-inner {
     flex-direction: column;

@@ -278,62 +278,34 @@ nav {
 /* ─────────────────────────────────────────────
    STATS
 ───────────────────────────────────────────── */
-.stats {
-  background: var(--dark);
-  padding: 5rem 2rem;
-}
-
-.stats-inner {
+/* About stats strip */
+.about-stats {
   max-width: 1160px;
   margin: 0 auto;
-}
-
-.stats-header {
-  text-align: center;
-  margin-bottom: 3.5rem;
-}
-
-.stats-header h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.4rem;
-  color: white;
-  line-height: 1.2;
-  margin: 0;
-}
-
-.stats-grid {
+  width: 100%;
+  padding: 2.5rem 2rem 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
+  border-top: 1px solid var(--border);
 }
 
-.stat {
-  text-align: center;
-  padding: 1.5rem 1rem;
-  border-left: 1px solid rgba(255,255,255,0.08);
-}
-.stat:first-child { border-left: none; }
+.astat { text-align: center; }
 
-.stat-ico {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  opacity: 0.85;
-}
-
-.stat-num {
+.astat-num {
   font-family: 'Playfair Display', serif;
-  font-size: 3.25rem;
+  font-size: 2.6rem;
   font-weight: 700;
-  color: white;
+  color: var(--text);
   line-height: 1;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
-.stat-num span { color: var(--red); }
+.astat-num span { color: var(--red); }
 
-.stat-lbl {
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.5);
+.astat-lbl {
+  font-size: 0.74rem;
+  color: var(--muted);
   font-weight: 600;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -568,7 +540,7 @@ section.no-snap { min-height: auto; }
 .about-inner {
   max-width: 1160px;
   margin: 0 auto;
-  padding: 6rem 2rem 7rem;
+  padding: 3rem 2rem 2.5rem;
   display: flex;
   gap: 5rem;
   align-items: center;
@@ -931,7 +903,7 @@ footer {
 
   .about-inner {
     flex-direction: column;
-    padding: 4rem 1.5rem 5.5rem;
+    padding: 2.5rem 1.5rem 2rem;
     gap: 3rem;
   }
 
@@ -945,14 +917,9 @@ footer {
   .step-arrow  { display: none; }
   .steps       { gap: 1rem; }
 
-  .stats             { padding: 3.5rem 1.5rem; }
-  .stats-header h2   { font-size: 1.8rem; }
-  .stats-header      { margin-bottom: 2.5rem; }
-  .stats-grid        { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-  .stat              { border-left: none; padding: 1rem 0.5rem; }
-  .stat-num          { font-size: 2.6rem; }
-  .stat-ico          { font-size: 1.4rem; margin-bottom: 0.6rem; }
-  .stat-lbl          { font-size: 0.7rem; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; padding: 2rem 1.5rem 0; }
+  .astat-num   { font-size: 2rem; }
+  .astat-lbl   { font-size: 0.7rem; }
 
   .footer-top { flex-direction: column; gap: 1rem; text-align: center; }
   .footer-contact { justify-content: center; }

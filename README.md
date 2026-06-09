@@ -87,9 +87,9 @@ All logo assets live in `frontend/`. Use the existing files — do not redraw.
 
 ### Color treatment
 
-- **Default**: brand red (`#E90A46`) — leave the SVG as-is.
+- **Default**: brand red (`#E90A46`) — leave the SVG as-is. Use this whenever the wordmark is itself an action (clickable link back to the site) or a brand statement.
 - **On dark background**: invert to white via CSS `filter: brightness(0) invert(1);` (with optional `opacity: 0.7` for hierarchy). See footer in `index.html`.
-- **Subtle / muted gray**: `filter: brightness(0) opacity(0.5);` — used for the "back to website" wordmark in the login navbar.
+- **Subtle / muted gray**: `filter: brightness(0) opacity(0.5);` — only for purely decorative, non-interactive contexts where the wordmark should recede (e.g. a watermark). Do not use for clickable navigation — that should stay in brand red so the affordance reads as an action.
 
 ### Cross-domain usage
 
@@ -135,7 +135,7 @@ on the parent.
 | Footer phone | `phone` | white (on dark footer) |
 | Footer email | `mail` | white |
 | Footer Instagram | `instagram` | white |
-| Login navbar back arrow | `chevron-left` | `--gray` |
+| Login navbar back arrow | `chevron-left` | `--red` (paired with red wordmark — it's a clickable action) |
 
 ### Sizing convention
 

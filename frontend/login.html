@@ -6,6 +6,7 @@
   <title>Login | Abundios Cleaning</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
   <style>
     body {
       background: var(--pink-light);
@@ -157,13 +158,35 @@
     }
     .btn-google:hover { border-color: #c5607a; box-shadow: 0 2px 8px rgba(224,122,150,0.15); }
     .btn-google img { width: 20px; height: 20px; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      color: #6D7378;
+      transition: color 0.2s;
+    }
+    .back-link svg.lucide { width: 20px; height: 20px; stroke-width: 2.5; }
+    .back-wordmark {
+      height: 26px;
+      width: auto;
+      display: block;
+      filter: brightness(0) opacity(0.5);
+      transition: opacity 0.2s;
+    }
+    .back-link:hover { color: #111827; }
+    .back-link:hover .back-wordmark { opacity: 0.75; }
   </style>
 </head>
 <body>
 
   <nav>
     <div class="nav-inner">
-      <a href="https://abundioscleaning.com" class="logo" style="text-decoration:none;display:flex;align-items:center;gap:0.35rem;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Abundios Cleaning</a>
+      <a href="https://abundioscleaning.com" class="back-link" aria-label="Back to Abundios Cleaning website">
+        <i data-lucide="chevron-left"></i>
+        <img src="wordmark.svg" alt="Abundios Cleaning" class="back-wordmark" />
+      </a>
     </div>
   </nav>
 
@@ -204,6 +227,8 @@
   </div>
 
   <script>
+    window.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+
     function togglePw() {
       const input = document.getElementById('password');
       const eye   = document.getElementById('eyeIcon');

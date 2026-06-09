@@ -284,6 +284,7 @@ nav {
 ───────────────────────────────────────────── */
 section {
   min-height: calc(100vh - 69px);
+  scroll-margin-top: 69px;
   display: flex;
   flex-direction: column;
   justify-content: center;

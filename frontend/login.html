@@ -103,19 +103,28 @@
       margin-top: 1rem;
       display: none;
     }
-    .links {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-    }
-    .links a {
+    .forgot-link {
+      display: none;
+      text-align: center;
+      margin-top: 0.75rem;
       font-size: 0.85rem;
       color: var(--pink-dark);
       text-decoration: none;
     }
-    .links a:hover { text-decoration: underline; }
+    .forgot-link.visible { display: block; }
+    .forgot-link:hover { text-decoration: underline; }
+    .signup-line {
+      text-align: center;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .signup-line a {
+      color: var(--pink-dark);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .signup-line a:hover { text-decoration: underline; }
     .divider {
       display: flex;
       align-items: center;
@@ -179,22 +188,18 @@
         </div>
       </div>
 
-      <button class="btn-submit" onclick="login()">Sign In</button>
+      <button class="btn-submit" onclick="login()">Continue</button>
       <p class="error-msg" id="errorMsg">Incorrect email/username or password.</p>
+      <a href="/forgot-password" class="forgot-link" id="forgotLink">Forgot password?</a>
+
+      <p class="signup-line">Don't have an account? <a href="/register">Sign up</a></p>
 
       <div class="divider">or</div>
 
       <button class="btn-google" onclick="googleLogin()">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
-        Sign in with Google
+        Continue with Google
       </button>
-
-
-      <div class="links">
-        <a href="/forgot-password">Forgot your password?</a>
-        <a href="/register">Don't have an account? Sign up</a>
-        <a href="https://abundioscleaning.com">← Back to website</a>
-      </div>
     </div>
   </div>
 
@@ -228,6 +233,7 @@
             ? (data.detail || 'Please verify your email before signing in. Check your inbox.')
             : 'Incorrect email/username or password.';
           errorMsg.style.display = 'block';
+          document.getElementById('forgotLink').classList.add('visible');
           return;
         }
 
@@ -243,6 +249,7 @@
         }
       } catch (e) {
         errorMsg.style.display = 'block';
+        document.getElementById('forgotLink').classList.add('visible');
       }
     }
 

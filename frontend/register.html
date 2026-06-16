@@ -474,7 +474,12 @@
         if (data.role === 'admin' || data.role === 'staff') {
           window.location.href = 'https://app.abundioscleaning.com/';
         } else {
-          window.location.href = 'https://portal.abundioscleaning.com/';
+          const q = new URLSearchParams({
+            token: data.access_token,
+            role: data.role,
+            first_name: data.first_name || '',
+          });
+          window.location.href = 'https://portal.abundioscleaning.com/?' + q.toString();
         }
       } catch {
         otpError.textContent = 'Something went wrong. Please try again.';

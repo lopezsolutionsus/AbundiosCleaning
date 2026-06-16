@@ -5,14 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up | Abundios Cleaning</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
   <style>
     body {
-      background: var(--pink-light);
+      background: var(--bg-alt);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
+    nav .nav-inner { padding: 1.25rem 2rem; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--red);
+      transition: color 0.2s;
+    }
+    .back-link svg.lucide { width: 26px; height: 26px; stroke-width: 2.5; }
+    .back-wordmark {
+      height: 36px;
+      width: auto;
+      display: block;
+      transition: filter 0.2s;
+    }
+    .back-link:hover { color: var(--red-dk); }
+    .back-link:hover .back-wordmark { filter: brightness(0.85); }
+
     .login-wrap {
       flex: 1;
       display: flex;
@@ -22,52 +45,68 @@
     }
     .login-box {
       background: white;
+      border: 1px solid var(--border);
       border-radius: 1.5rem;
       padding: 2.5rem;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 4px 24px rgba(224, 122, 150, 0.15);
+      box-shadow: 0 4px 24px rgba(17, 24, 39, 0.06);
     }
     .login-box h1 {
-      font-size: 1.5rem;
-      color: var(--pink-dark);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
       margin-bottom: 0.5rem;
       text-align: center;
     }
     .login-box .subtitle {
       text-align: center;
-      color: #888;
+      color: var(--muted);
       font-size: 0.9rem;
       margin-bottom: 2rem;
     }
-    .field {
-      margin-bottom: 1.2rem;
-    }
+    .field { margin-bottom: 1.2rem; }
     .field label {
       display: block;
       font-size: 0.85rem;
       font-weight: 600;
-      color: #555;
+      color: var(--text);
       margin-bottom: 0.4rem;
     }
     .field input {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 1.5px solid #f0d6de;
+      border: 1.5px solid var(--border);
       border-radius: 0.75rem;
       font-size: 1rem;
       outline: none;
       transition: border 0.2s;
     }
-    .field input:focus { border-color: var(--pink-dark); }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
+    .field input:focus { border-color: var(--red); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 2.8rem; }
+    .pw-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 0;
+      display: flex;
+      align-items: center;
     }
+    .pw-toggle:hover { color: var(--red); }
+    .pw-toggle svg.lucide { width: 18px; height: 18px; stroke-width: 2; }
+
     .btn-submit {
       width: 100%;
-      background: var(--pink-dark);
+      background: var(--red);
       color: white;
       border: none;
       padding: 0.85rem;
@@ -76,42 +115,50 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 0.5rem;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.2s;
     }
-    .btn-submit:hover { background: #c5607a; }
+    .btn-submit:hover { background: var(--red-dk); transform: translateY(-1px); }
+    .btn-submit:disabled {
+      background: var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-submit:disabled:hover { background: var(--border); transform: none; }
+
     .error-msg {
-      color: #c0392b;
+      color: var(--red);
       font-size: 0.85rem;
       text-align: center;
       margin-top: 1rem;
       display: none;
     }
-    .links {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-    }
-    .links a {
+    .signin-line {
+      text-align: center;
+      margin-top: 1.25rem;
       font-size: 0.85rem;
-      color: var(--pink-dark);
-      text-decoration: none;
+      color: var(--muted);
     }
-    .links a:hover { text-decoration: underline; }
+    .signin-line a {
+      color: var(--red);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .signin-line a:hover { text-decoration: underline; }
+
     .divider {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       margin: 1.25rem 0;
-      color: #bbb;
+      color: var(--muted);
       font-size: 0.85rem;
     }
     .divider::before, .divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: #f0d6de;
+      background: var(--border);
     }
     .btn-google {
       width: 100%;
@@ -120,8 +167,8 @@
       justify-content: center;
       gap: 0.6rem;
       background: white;
-      color: #444;
-      border: 1.5px solid #f0d6de;
+      color: var(--text);
+      border: 1.5px solid var(--border);
       padding: 0.75rem;
       border-radius: 999px;
       font-size: 0.95rem;
@@ -129,73 +176,193 @@
       cursor: pointer;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .btn-google:hover { border-color: #c5607a; box-shadow: 0 2px 8px rgba(224,122,150,0.15); }
+    .btn-google:hover { border-color: var(--red); box-shadow: 0 2px 8px rgba(233, 10, 70, 0.12); }
     .btn-google img { width: 20px; height: 20px; }
+
+    /* OTP step */
+    .otp-email {
+      text-align: center;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0.5rem 0 1.75rem;
+      word-break: break-all;
+    }
+    .otp-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .otp-row input {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: 0.75rem;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      padding: 0;
+    }
+    .otp-row input:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(233, 10, 70, 0.1);
+    }
+    .resend-line {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .resend-line button {
+      background: none;
+      border: none;
+      color: var(--red);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0;
+      font-family: inherit;
+    }
+    .resend-line button:hover { text-decoration: underline; }
+    .resend-line button:disabled {
+      color: var(--muted);
+      cursor: not-allowed;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
 
   <nav>
     <div class="nav-inner">
-      <a href="https://abundioscleaning.com" class="logo" style="text-decoration:none;display:flex;align-items:center;gap:0.35rem;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Abundios Cleaning</a>
+      <a href="https://abundioscleaning.com" class="back-link" aria-label="Back to Abundios Cleaning website">
+        <i data-lucide="chevron-left"></i>
+        <img src="https://abundioscleaning.com/wordmark.svg" alt="Abundios Cleaning" class="back-wordmark" />
+      </a>
     </div>
   </nav>
 
   <div class="login-wrap">
-    <div class="login-box">
-      <h1>Create account</h1>
-      <p class="subtitle">Join Abundios Cleaning</p>
+    <div class="login-box" id="loginBox">
 
-      <div class="row">
-        <div class="field">
-          <label>First Name <span style="color:var(--pink-dark)">*</span></label>
-          <input type="text" id="first_name" placeholder="John" />
+      <!-- STEP 1: signup form -->
+      <div id="signupStep">
+        <h1>Create account</h1>
+        <p class="subtitle">Join Abundios Cleaning</p>
+
+        <div class="row">
+          <div class="field">
+            <label>First Name <span style="color:var(--red)">*</span></label>
+            <input type="text" id="first_name" placeholder="John" />
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" id="last_name" placeholder="Doe" />
+          </div>
         </div>
+
         <div class="field">
-          <label>Last Name</label>
-          <input type="text" id="last_name" placeholder="Doe" />
+          <label>Email <span style="color:var(--red)">*</span></label>
+          <input type="email" id="email" placeholder="john@example.com" />
         </div>
+
+        <div class="field">
+          <label>Phone <span style="font-weight:400;color:var(--muted);font-size:0.8rem;">(optional)</span></label>
+          <input type="tel" id="phone" placeholder="(434) 000-0000" />
+        </div>
+
+        <div class="field">
+          <label>Password <span style="color:var(--red)">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="password" placeholder="At least 6 characters" />
+            <button type="button" class="pw-toggle" onclick="togglePw('password', this)" tabindex="-1" aria-label="Show password">
+              <i data-lucide="eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Confirm Password <span style="color:var(--red)">*</span></label>
+          <div class="pw-wrap">
+            <input type="password" id="confirm_password" placeholder="Repeat your password" />
+            <button type="button" class="pw-toggle" onclick="togglePw('confirm_password', this)" tabindex="-1" aria-label="Show password">
+              <i data-lucide="eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="registerBtn" onclick="register()" disabled>Create Account</button>
+        <p class="error-msg" id="errorMsg"></p>
+
+        <div class="divider">or</div>
+
+        <button class="btn-google" onclick="googleLogin()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+          Continue with Google
+        </button>
+
+        <p class="signin-line">Already have an account? <a href="/login">Sign in</a></p>
       </div>
 
-      <div class="field">
-        <label>Email <span style="color:var(--pink-dark)">*</span></label>
-        <input type="email" id="email" placeholder="john@example.com" />
+      <!-- STEP 2: enter code -->
+      <div id="otpStep" style="display:none">
+        <h1>Enter your code</h1>
+        <p class="subtitle">We sent a 6-digit code to</p>
+        <p class="otp-email" id="otpEmail"></p>
+
+        <div class="otp-row" id="otpRow">
+          <input type="text" inputmode="numeric" maxlength="1" />
+          <input type="text" inputmode="numeric" maxlength="1" />
+          <input type="text" inputmode="numeric" maxlength="1" />
+          <input type="text" inputmode="numeric" maxlength="1" />
+          <input type="text" inputmode="numeric" maxlength="1" />
+          <input type="text" inputmode="numeric" maxlength="1" />
+        </div>
+
+        <button class="btn-submit" id="verifyBtn" onclick="verifyCode()" disabled>Verify</button>
+        <p class="error-msg" id="otpError"></p>
+
+        <p class="resend-line">
+          Didn't receive it? <button id="resendBtn" onclick="resendCode()">Resend code</button>
+        </p>
       </div>
 
-      <div class="field">
-        <label>Phone <span style="font-weight:400;color:#bbb;font-size:0.8rem;">(optional)</span></label>
-        <input type="tel" id="phone" placeholder="(434) 000-0000" />
-      </div>
-
-      <div class="field">
-        <label>Password <span style="color:var(--pink-dark)">*</span></label>
-        <input type="password" id="password" placeholder="At least 6 characters" />
-      </div>
-
-      <div class="field">
-        <label>Confirm Password <span style="color:var(--pink-dark)">*</span></label>
-        <input type="password" id="confirm_password" placeholder="Repeat your password" />
-      </div>
-
-      <button class="btn-submit" onclick="register()">Create Account</button>
-      <p class="error-msg" id="errorMsg"></p>
-
-      <div class="divider">or</div>
-
-      <button class="btn-google" onclick="googleLogin()">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
-        Sign up with Google
-      </button>
-
-
-      <div class="links">
-        <a href="/login">Already have an account? Sign in</a>
-        <a href="https://abundioscleaning.com">← Back to website</a>
-      </div>
     </div>
   </div>
 
   <script>
+    let pendingEmail = '';
+    let resendTimer = 0;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+
+      const required = ['first_name', 'email', 'password', 'confirm_password'];
+      const btn = document.getElementById('registerBtn');
+      const sync = () => {
+        btn.disabled = !required.every(id => document.getElementById(id).value.trim());
+      };
+      required.forEach(id => document.getElementById(id).addEventListener('input', sync));
+      sync();
+
+      setupOtpInputs();
+    });
+
+    function togglePw(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const show  = input.type === 'password';
+      input.type  = show ? 'text' : 'password';
+      btn.innerHTML = '';
+      const icon = document.createElement('i');
+      icon.setAttribute('data-lucide', show ? 'eye-off' : 'eye');
+      btn.appendChild(icon);
+      lucide.createIcons();
+    }
+
     async function register() {
       const first_name       = document.getElementById('first_name').value.trim();
       const last_name        = document.getElementById('last_name').value.trim();
@@ -207,18 +374,11 @@
 
       errorMsg.style.display = 'none';
 
-      if (!first_name || !email || !password) {
-        errorMsg.textContent = 'Please fill in all required fields.';
-        errorMsg.style.display = 'block';
-        return;
-      }
-
       if (password !== confirm_password) {
         errorMsg.textContent = 'Passwords do not match.';
         errorMsg.style.display = 'block';
         return;
       }
-
       if (password.length < 6) {
         errorMsg.textContent = 'Password must be at least 6 characters.';
         errorMsg.style.display = 'block';
@@ -231,34 +391,132 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ first_name, last_name, email, phone, password }),
         });
-
         const data = await res.json();
-
         if (!res.ok) {
           errorMsg.textContent = data.detail || 'Registration failed.';
           errorMsg.style.display = 'block';
           return;
         }
-
-        document.querySelector('.login-box').innerHTML = `
-          <h1 style="font-size:1.4rem;color:var(--pink-dark);margin-bottom:0.5rem;text-align:center">Check your email</h1>
-          <p style="text-align:center;color:#888;font-size:0.9rem;margin-bottom:1.5rem">We sent a confirmation link to</p>
-          <p style="text-align:center;font-weight:600;color:#333;font-size:1rem;margin-bottom:1.5rem">${data.email}</p>
-          <p style="text-align:center;color:#aaa;font-size:0.82rem;line-height:1.6">Click the link in the email to activate your account.<br>Don't forget to check your spam folder.</p>
-          <div style="text-align:center;margin-top:1.5rem">
-            <a href="/login" style="color:var(--pink-dark);font-size:0.85rem;text-decoration:none">← Back to sign in</a>
-          </div>
-        `;
-
-      } catch (e) {
+        pendingEmail = data.email;
+        showOtpStep();
+      } catch {
         errorMsg.textContent = 'Something went wrong. Please try again.';
         errorMsg.style.display = 'block';
       }
     }
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') register();
-    });
+    function showOtpStep() {
+      document.getElementById('signupStep').style.display = 'none';
+      document.getElementById('otpStep').style.display = 'block';
+      document.getElementById('otpEmail').textContent = pendingEmail;
+      document.querySelector('#otpRow input').focus();
+      startResendCooldown(30);
+    }
+
+    function setupOtpInputs() {
+      const inputs = document.querySelectorAll('#otpRow input');
+      const verifyBtn = document.getElementById('verifyBtn');
+      const sync = () => {
+        verifyBtn.disabled = !Array.from(inputs).every(i => i.value.trim());
+      };
+      inputs.forEach((input, idx) => {
+        input.addEventListener('input', (e) => {
+          const v = e.target.value.replace(/\D/g, '');
+          e.target.value = v.slice(-1);
+          if (e.target.value && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+          sync();
+        });
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+            inputs[idx - 1].focus();
+          }
+          if (e.key === 'Enter' && !verifyBtn.disabled) verifyCode();
+        });
+        input.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+          for (let i = 0; i < text.length && i < inputs.length; i++) {
+            inputs[i].value = text[i];
+          }
+          inputs[Math.min(text.length, inputs.length - 1)].focus();
+          sync();
+        });
+      });
+      sync();
+    }
+
+    async function verifyCode() {
+      const inputs = document.querySelectorAll('#otpRow input');
+      const code = Array.from(inputs).map(i => i.value).join('');
+      const otpError = document.getElementById('otpError');
+      otpError.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/auth/verify-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: pendingEmail, code }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          otpError.textContent = data.detail || 'Invalid or expired code.';
+          otpError.style.display = 'block';
+          inputs.forEach(i => i.value = '');
+          inputs[0].focus();
+          document.getElementById('verifyBtn').disabled = true;
+          return;
+        }
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('first_name', data.first_name);
+        if (data.role === 'admin' || data.role === 'staff') {
+          window.location.href = 'https://app.abundioscleaning.com/';
+        } else {
+          window.location.href = 'https://portal.abundioscleaning.com/';
+        }
+      } catch {
+        otpError.textContent = 'Something went wrong. Please try again.';
+        otpError.style.display = 'block';
+      }
+    }
+
+    async function resendCode() {
+      if (resendTimer > 0) return;
+      try {
+        const res = await fetch('/api/auth/resend-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: pendingEmail }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          const otpError = document.getElementById('otpError');
+          otpError.textContent = data.detail || 'Could not resend code.';
+          otpError.style.display = 'block';
+          return;
+        }
+        startResendCooldown(30);
+      } catch {}
+    }
+
+    function startResendCooldown(seconds) {
+      const btn = document.getElementById('resendBtn');
+      resendTimer = seconds;
+      btn.disabled = true;
+      btn.textContent = `Resend in ${resendTimer}s`;
+      const interval = setInterval(() => {
+        resendTimer--;
+        if (resendTimer <= 0) {
+          clearInterval(interval);
+          btn.disabled = false;
+          btn.textContent = 'Resend code';
+        } else {
+          btn.textContent = `Resend in ${resendTimer}s`;
+        }
+      }, 1000);
+    }
 
     function googleLogin() {
       const clientId = '52874344580-o0slf4g1rao4mss8g0opffoecfk5nd17.apps.googleusercontent.com';

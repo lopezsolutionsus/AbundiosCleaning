@@ -68,7 +68,11 @@ class ResetPasswordForm(BaseModel):
     password: str
 
 class VerifyEmailForm(BaseModel):
-    token: str
+    email: str
+    code: str
+
+class ResendCodeForm(BaseModel):
+    email: str
 
 
 @router.post("/login", response_model=Token)
@@ -85,23 +89,25 @@ def login(form: LoginForm, db: Session = Depends(get_db)):
     return {"access_token": token, "token_type": "bearer", "role": user.role, "first_name": user.first_name, "phone_verified": True}
 
 
-def _send_verification_email(to_email: str, verify_url: str, first_name: str):
+def _send_verification_email(to_email: str, code: str, first_name: str):
     if not SMTP_USER or not SMTP_PASS:
         return
     body = f"""Hi {first_name},
 
 Thanks for creating an account with Abundios Cleaning!
 
-Please verify your email address by clicking the link below (valid for 24 hours):
+Your verification code is:
 
-{verify_url}
+{code}
+
+Enter this code in the app to activate your account. The code expires in 15 minutes.
 
 If you didn't create an account, you can safely ignore this email.
 
 — Abundios Cleaning
 """
     msg = MIMEText(body)
-    msg["Subject"] = "Verify your Abundios Cleaning account"
+    msg["Subject"] = f"Your Abundios verification code: {code}"
     msg["From"] = f"Abundios Cleaning <{SMTP_USER}>"
     msg["To"] = to_email
     try:
@@ -112,6 +118,35 @@ If you didn't create an account, you can safely ignore this email.
             server.sendmail(SMTP_USER, [to_email], msg.as_string())
     except Exception:
         pass
+
+
+def _generate_unique_code(db: Session) -> str:
+    for _ in range(20):
+        code = f"{random.randint(0, 999999):06d}"
+        exists = db.query(models.EmailVerificationToken).filter(
+            models.EmailVerificationToken.token == code,
+            models.EmailVerificationToken.used == False,
+            models.EmailVerificationToken.expires_at > datetime.utcnow(),
+        ).first()
+        if not exists:
+            return code
+    raise HTTPException(status_code=500, detail="Could not generate a unique code, please retry.")
+
+
+def _issue_email_code(user: models.User, db: Session) -> str:
+    db.query(models.EmailVerificationToken).filter(
+        models.EmailVerificationToken.user_id == user.id,
+        models.EmailVerificationToken.used == False,
+    ).delete(synchronize_session=False)
+    code = _generate_unique_code(db)
+    record = models.EmailVerificationToken(
+        user_id=user.id,
+        token=code,
+        expires_at=datetime.utcnow() + timedelta(minutes=15),
+    )
+    db.add(record)
+    db.commit()
+    return code
 
 
 @router.post("/register")
@@ -132,19 +167,22 @@ def register(form: RegisterForm, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
 
-    token = secrets.token_urlsafe(32)
-    verify_token = models.EmailVerificationToken(
-        user_id=user.id,
-        token=token,
-        expires_at=datetime.utcnow() + timedelta(hours=24),
-    )
-    db.add(verify_token)
-    db.commit()
-
-    verify_url = f"{APP_BASE_URL}/verify-email?token={token}"
-    _send_verification_email(user.email, verify_url, user.first_name)
+    code = _issue_email_code(user, db)
+    _send_verification_email(user.email, code, user.first_name)
 
     return {"message": "verification_sent", "email": user.email}
+
+
+@router.post("/resend-code")
+def resend_code(form: ResendCodeForm, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == form.email.lower()).first()
+    if not user:
+        return {"message": "verification_sent"}
+    if user.email_verified:
+        raise HTTPException(status_code=400, detail="Email is already verified.")
+    code = _issue_email_code(user, db)
+    _send_verification_email(user.email, code, user.first_name)
+    return {"message": "verification_sent"}
 
 
 def _login_or_create_google_user(info: dict, db: Session):
@@ -239,16 +277,17 @@ def verify_code(form: VerifyCodeForm, current_user=Depends(auth.get_current_user
 
 @router.post("/verify-email")
 def verify_email_route(form: VerifyEmailForm, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == form.email.lower()).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid or expired verification code.")
+
     record = db.query(models.EmailVerificationToken).filter(
-        models.EmailVerificationToken.token == form.token,
+        models.EmailVerificationToken.user_id == user.id,
+        models.EmailVerificationToken.token == form.code.strip(),
         models.EmailVerificationToken.used == False,
     ).first()
     if not record or record.expires_at < datetime.utcnow():
-        raise HTTPException(status_code=400, detail="Invalid or expired verification link.")
-
-    user = db.query(models.User).filter(models.User.id == record.user_id).first()
-    if not user:
-        raise HTTPException(status_code=400, detail="User not found.")
+        raise HTTPException(status_code=400, detail="Invalid or expired verification code.")
 
     user.email_verified = True
     record.used = True

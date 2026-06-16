@@ -12,6 +12,7 @@ import secrets
 import random
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta
 from twilio.rest import Client as TwilioClient
 
@@ -92,7 +93,7 @@ def login(form: LoginForm, db: Session = Depends(get_db)):
 def _send_verification_email(to_email: str, code: str, first_name: str):
     if not SMTP_USER or not SMTP_PASS:
         return
-    body = f"""Hi {first_name},
+    text_body = f"""Hi {first_name},
 
 Thanks for creating an account with Abundios Cleaning!
 
@@ -106,10 +107,32 @@ If you didn't create an account, you can safely ignore this email.
 
 — Abundios Cleaning
 """
-    msg = MIMEText(body)
+    html_body = f"""<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f9fafb;font-family:'Inter',Helvetica,Arial,sans-serif;color:#111827;line-height:1.6">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:40px 20px">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:40px 32px">
+        <tr><td>
+          <p style="margin:0 0 16px;font-size:15px">Hi {first_name},</p>
+          <p style="margin:0 0 24px;font-size:15px">Thanks for creating an account with Abundios Cleaning! Use the code below to verify your email address.</p>
+          <div style="text-align:center;margin:32px 0">
+            <div style="display:inline-block;font-size:38px;font-weight:700;letter-spacing:10px;color:#E90A46;background:#fde8ee;padding:18px 28px;border-radius:12px;font-family:'Inter',Helvetica,Arial,sans-serif">{code}</div>
+          </div>
+          <p style="margin:0 0 16px;font-size:14px;color:#6b7280;text-align:center">This code expires in 15 minutes.</p>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0" />
+          <p style="margin:0;font-size:13px;color:#6b7280">If you didn't create an account, you can safely ignore this email.</p>
+          <p style="margin:16px 0 0;font-size:13px;color:#6b7280">— Abundios Cleaning</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>"""
+    msg = MIMEMultipart("alternative")
     msg["Subject"] = f"Your Abundios verification code: {code}"
     msg["From"] = f"Abundios Cleaning <{SMTP_USER}>"
     msg["To"] = to_email
+    msg.attach(MIMEText(text_body, "plain"))
+    msg.attach(MIMEText(html_body, "html"))
     try:
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
             server.ehlo()

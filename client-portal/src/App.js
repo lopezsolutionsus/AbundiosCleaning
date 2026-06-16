@@ -8,7 +8,7 @@ import './App.css';
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
   if (!token) {
-    window.location.href = 'https://app.abundioscleaning.com/login';
+    window.location.href = '/login';
     return null;
   }
   return children;
@@ -16,7 +16,7 @@ function PrivateRoute({ children }) {
 
 function App() {
   return (
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/portal">
       <Routes>
         <Route path="/" element={
           <PrivateRoute>

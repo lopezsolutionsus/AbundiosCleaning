@@ -471,15 +471,13 @@
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('role', data.role);
         localStorage.setItem('first_name', data.first_name);
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('first_name', data.first_name || '');
         if (data.role === 'admin' || data.role === 'staff') {
-          window.location.href = 'https://app.abundioscleaning.com/';
+          window.location.href = '/';
         } else {
-          const q = new URLSearchParams({
-            token: data.access_token,
-            role: data.role,
-            first_name: data.first_name || '',
-          });
-          window.location.href = 'https://portal.abundioscleaning.com/?' + q.toString();
+          window.location.href = '/portal/';
         }
       } catch {
         otpError.textContent = 'Something went wrong. Please try again.';
